@@ -4,20 +4,39 @@ import android.graphics.Bitmap;
 
 public class User {
 
-    int id, age;
-    String  name, username, password, surname, address, phone, email;
-    private Bitmap avatar;
+    //int id, age;
+    //String  name, username, password, surname, address, phone, email;
+    //private Bitmap avatar;
+
+    String username, password;
 
     public User() {
     }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+ /*
     public User(String name, String username, String password) {
         this.name = name;
         this.username = username;
         this.password = password;
     }
 
-    public User(int id, int age, String name, String username, String password, String surname, String address, String phone, String email, Bitmap avatar) {
+    public User(int id, int age, String name, String username, String password, String surname, String address, String phone, String email) {
+        this.id = id;
+        this.age = age;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.surname = surname;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+    }
+
+   public User(int id, int age, String name, String username, String password, String surname, String address, String phone, String email, Bitmap avatar) {
         this.id = id;
         this.age = age;
         this.name = name;
@@ -52,7 +71,7 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
+    }*/
 
     public String getUsername() {
         return username;
@@ -70,7 +89,7 @@ public class User {
         this.password = password;
     }
 
-    public String getSurname() {
+    /*public String getSurname() {
         return surname;
     }
 
@@ -108,5 +127,5 @@ public class User {
 
     public void setAvatar(Bitmap avatar) {
         this.avatar = avatar;
-    }
+    }*/
 }

@@ -8,10 +8,10 @@
 
     <ImageButton
         android:id="@+id/backBtn"
-        android:layout_width="48dp"
-        android:layout_height="41dp"
+        android:layout_width="62dp"
+        android:layout_height="49dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="#00FFFFFF"
         android:onClick="comeBack"
         android:scaleType="fitCenter"
@@ -23,166 +23,191 @@
 
     <TextView
         android:id="@+id/crteUserAccountTV"
-        android:layout_width="212dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="56dp"
+        android:layout_width="211dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/anton"
         android:text="Create an User"
         android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/nameET"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/backBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.31" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/nameET"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Name"
-        android:inputType="textPersonName"
+    <ScrollView
+        android:id="@+id/fieldsSV"
+        android:layout_width="381dp"
+        android:layout_height="429dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/crteUserAccountTV"
-        tools:ignore="TouchTargetSizeCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/crteUserAccountTV">
 
-    <EditText
-        android:id="@+id/usernameET"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Username"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameET"
-        tools:ignore="TouchTargetSizeCheck" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/addressET"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Address"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/surnameET"
-        tools:ignore="TouchTargetSizeCheck" />
 
-    <EditText
-        android:id="@+id/phoneET"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Phone Number"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addressET"
-        tools:ignore="TouchTargetSizeCheck" />
+            <EditText
+                android:id="@+id/nameET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/crteUserAccountTV"
+                tools:ignore="TouchTargetSizeCheck" />
 
-    <EditText
-        android:id="@+id/surnameET"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Surname"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordET"
-        tools:ignore="TouchTargetSizeCheck" />
+            <EditText
+                android:id="@+id/usernameET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Username"
+                android:inputType="textPersonName"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nameET"
+                tools:ignore="TouchTargetSizeCheck" />
 
-    <EditText
-        android:id="@+id/passwordET"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameET"
-        tools:ignore="TouchTargetSizeCheck" />
+            <EditText
+                android:id="@+id/addressET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Address"
+                android:inputType="textPersonName"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/surnameET"
+                tools:ignore="TouchTargetSizeCheck" />
 
-    <EditText
-        android:id="@+id/ageET"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Age"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailET"
-        tools:ignore="TouchTargetSizeCheck" />
+            <EditText
+                android:id="@+id/phoneET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Phone Number"
+                android:inputType="phone"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addressET"
+                tools:ignore="TouchTargetSizeCheck" />
 
-    <EditText
-        android:id="@+id/emailET"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneET"
-        tools:ignore="TouchTargetSizeCheck" />
+            <EditText
+                android:id="@+id/surnameET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Surname"
+                android:inputType="textPersonName"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/passwordET"
+                tools:ignore="TouchTargetSizeCheck" />
 
-    <ImageButton
-        android:id="@+id/avatarBtn"
-        android:layout_width="95dp"
-        android:layout_height="83dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
-        android:background="#00FFFFFF"
-        android:scaleType="centerInside"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.484"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ageET"
-        app:layout_constraintVertical_bias="0.107"
-        tools:ignore="SpeakableTextPresentCheck"
-        tools:srcCompat="@drawable/avatar" />
+            <EditText
+                android:id="@+id/passwordET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/usernameET"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <EditText
+                android:id="@+id/ageET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Age"
+                android:inputType="phone"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/emailET"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <EditText
+                android:id="@+id/emailET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/phoneET"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/avatarBtn"
+                android:layout_width="match_parent"
+                android:layout_height="83dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp"
+                android:background="#00FFFFFF"
+                android:scaleType="centerInside"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.484"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ageET"
+                app:layout_constraintVertical_bias="0.107"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:srcCompat="@drawable/avatar" />
+
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/createBtn"
-        android:layout_width="95dp"
-        android:layout_height="wrap_content"
+        android:layout_width="141dp"
+        android:layout_height="59dp"
         android:layout_marginStart="153dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="164dp"
         android:onClick="createUser"
         android:text="Create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatarBtn"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/fieldsSV" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

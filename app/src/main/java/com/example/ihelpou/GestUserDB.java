@@ -1,5 +1,7 @@
 package com.example.ihelpou;
 
+import android.content.Intent;
+import android.text.Editable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,46 +15,52 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Console;
+import java.util.ArrayList;
 
 public class GestUserDB {
 
-    private DatabaseReference databaseReference;
+    final DatabaseReference databaseReference;
+    protected boolean exists = false;
 
     public GestUserDB(){
-
         FirebaseDatabase fd = FirebaseDatabase.getInstance();
-        databaseReference = fd.getReference(User.class.getSimpleName());
+        databaseReference = fd.getReference();
     }
 
     public Task<Void> addUser(User user){
-        return databaseReference.push().setValue(user);
+        return databaseReference.child("User").push().setValue(user);
     }
 
-    public User selectUser(String username, String password){
-        final User[] user = {null};
-
+    public boolean selectUser(String username, String password){
         databaseReference.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot object : dataSnapshot.getChildren()){
-                    System.out.println(object.child("username"));
-                    System.out.println(object.child("password"));
+                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    databaseReference.child("User").child(snapshot.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            User user = snapshot.getValue(User.class);
+                            Log.e("Username: ", user.getUsername());
+                            Log.e("Password: ", user.getPassword());
 
-                    System.out.println(object.child("username").getValue().toString());
-                    System.out.println(object.child("password").getValue().toString());
+                            Log.e("Username Introduced: ", username);
+                            Log.e("Password Introduced: ", password);
 
-                    if (object.child("username").equals(username) && object.child("password").equals(password)){
-                        user[0] = new User(object.child("name").getValue().toString(), object.child("username").getValue().toString(), object.child("password").getValue().toString());
-                    }
+                            if (user.getUsername().equals(username) && user.getPassword().equals(password)){
+                                exists = true;
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
-
-        return user[0];
+        return exists;
     }
 }

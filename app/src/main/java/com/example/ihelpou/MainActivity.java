@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     }
     
     public void btnLogin(View view){
-        if ((gestUserDB.selectUser(usernameET.getText().toString(), passwordET.getText().toString())) != null) {
+        gestUserDB.selectUser(usernameET.getText().toString(), passwordET.getText().toString());
+        if (gestUserDB.exists){
             Intent intent = new Intent(this, BeginingActivity.class);
             startActivity(intent);
         }
