@@ -26,7 +26,6 @@ public class BeginingActivity extends AppCompatActivity {
 
     private ActivityBeginingBinding binding;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

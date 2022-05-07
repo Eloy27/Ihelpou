@@ -1,10 +1,10 @@
-package com.example.ihelpou;
+package com.example.ihelpou.models;
 
-import android.graphics.Bitmap;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
 
-    //int id, age;
+    //int key, age;
     //String  name, username, password, surname, address, phone, email;
     //private Bitmap avatar;
 

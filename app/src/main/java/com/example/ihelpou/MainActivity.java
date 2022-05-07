@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText usernameET, passwordET;
     private Button loginBtn, registerBtn;
-    GestUserDB gestUserDB = new GestUserDB();
+    GestClassDB gestClassDB = new GestClassDB();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     }
     
     public void btnLogin(View view){
-        gestUserDB.selectUser(usernameET.getText().toString(), passwordET.getText().toString());
-        if (gestUserDB.exists){
+        gestClassDB.selectUser(usernameET.getText().toString(), passwordET.getText().toString());
+        if (gestClassDB.exists){
             Intent intent = new Intent(this, BeginingActivity.class);
             startActivity(intent);
         }

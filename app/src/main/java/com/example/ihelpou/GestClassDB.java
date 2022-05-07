@@ -1,12 +1,11 @@
 package com.example.ihelpou;
 
-import android.content.Intent;
-import android.text.Editable;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.ihelpou.models.Aid;
+import com.example.ihelpou.models.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,15 +13,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Console;
-import java.util.ArrayList;
-
-public class GestUserDB {
+public class GestClassDB {
 
     final DatabaseReference databaseReference;
     protected boolean exists = false;
 
-    public GestUserDB(){
+    public GestClassDB(){
         FirebaseDatabase fd = FirebaseDatabase.getInstance();
         databaseReference = fd.getReference();
     }
@@ -31,15 +27,22 @@ public class GestUserDB {
         return databaseReference.child("User").push().setValue(user);
     }
 
-    public boolean selectUser(String username, String password){
+    public Task<Void> addAid(Aid aid, User user){
+        //return databaseReference.child("User").push().setValue(aid);
+        return null;
+    }
+
+    public void selectUser(String username, String password){
         databaseReference.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Log.e("Key: ", String.valueOf(databaseReference.child("User").child(snapshot.getKey())));
                     databaseReference.child("User").child(snapshot.getKey()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             User user = snapshot.getValue(User.class);
+
                             Log.e("Username: ", user.getUsername());
                             Log.e("Password: ", user.getPassword());
 
@@ -61,6 +64,5 @@ public class GestUserDB {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-        return exists;
     }
 }

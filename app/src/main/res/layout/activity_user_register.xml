@@ -83,6 +83,21 @@
                 tools:ignore="TouchTargetSizeCheck" />
 
             <EditText
+                android:id="@+id/passwordET"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/usernameET"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <EditText
                 android:id="@+id/addressET"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -127,25 +142,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/passwordET"
                 tools:ignore="TouchTargetSizeCheck" />
 
-            <EditText
-                android:id="@+id/passwordET"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/usernameET"
-                tools:ignore="TouchTargetSizeCheck" />
 
             <EditText
                 android:id="@+id/ageET"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="66dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="Age"
@@ -201,13 +202,17 @@
         android:layout_marginStart="153dp"
         android:layout_marginTop="6dp"
         android:layout_marginEnd="164dp"
+        android:backgroundTint="#FF0000"
         android:onClick="createUser"
         android:text="Create"
+        android:textSize="20sp"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintHorizontal_bias="0.382"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldsSV" />
+        app:layout_constraintTop_toBottomOf="@+id/fieldsSV"
+        app:layout_constraintVertical_bias="0.26" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

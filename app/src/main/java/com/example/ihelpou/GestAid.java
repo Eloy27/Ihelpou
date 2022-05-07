@@ -5,12 +5,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import com.example.ihelpou.models.Aid;
+import com.example.ihelpou.models.User;
 
 import java.util.Calendar;
 
@@ -19,13 +23,18 @@ public class GestAid extends AppCompatActivity {
     private EditText descriptionET, startTimeET, finishTimeET, firstDateET, secondDateET;
     private RadioButton especificDayRB, moreDaysRB;
     private ImageButton calendarBtn;
-    int day = 01, month = 01, year = 2022;
-    boolean firstDatePut = false;
+    private int day = 01, month = 01, year = 2022;
+    private boolean firstDatePut = false;
+    private GestClassDB gestClassDB = new GestClassDB();
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gest_aid);
+
+        Intent i = getIntent();
+        user = (User)i.getSerializableExtra("user");
 
         descriptionET = findViewById(R.id.descriptionET);
         startTimeET = findViewById(R.id.startTimeET);
@@ -94,5 +103,19 @@ public class GestAid extends AppCompatActivity {
                 firstDatePut = false;
             }
         }
+    }
+
+    public void createAid(View view){
+        Aid aid = new Aid(descriptionET.getText().toString());
+        gestClassDB.addAid(aid, user).addOnSuccessListener(suc ->
+        {
+            Intent intent = new Intent(this, BeginingActivity.class);
+            startActivity(intent);
+            Toast.makeText(this, "Aid added successfully", Toast.LENGTH_SHORT).show();
+
+        }).addOnFailureListener(err ->
+        {
+            Toast.makeText(this, err.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 }
