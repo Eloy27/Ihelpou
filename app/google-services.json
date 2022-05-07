@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "390351389409",
+    "firebase_url": "https://ihelpou-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "ihelpou",
+    "storage_bucket": "ihelpou.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390351389409:android:ff51e1b93d00410dc8eda0",
+        "android_client_info": {
+          "package_name": "com.example.ihelpou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "390351389409-f2ohem2uodlk3vgovo0hvqdkqtcfs7us.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcQQdA0wU_mYeYQDG8IxWE9-bL_AtJRrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "390351389409-f2ohem2uodlk3vgovo0hvqdkqtcfs7us.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

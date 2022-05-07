@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Ihelpou</string>
+    <string name="title_activity_begining">BeginingActivity</string>
+    <string name="tab_text_1">My Aids</string>
+    <string name="tab_text_2">Help Seekers</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_aids">Aids</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_help_seekers">Hello Help Seekers</string>
+</resources>
