@@ -24,7 +24,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     public SectionsPagerAdapter(Context context, FragmentManager fm, User user) {
         super(fm);
-        mContext = context;
+        this.mContext = context;
         this.user = user;
     }
 

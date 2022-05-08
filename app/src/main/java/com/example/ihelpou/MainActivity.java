@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText usernameET, passwordET;
     private Button loginBtn, registerBtn;
-    GestClassDB gestClassDB = new GestClassDB();
+    private GestClassDB gestClassDB = new GestClassDB();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         System.exit(0);
     }
 
-    public void chooseActivity(View view) {
+    public void registerBtn(View view) {
         Intent intent = new Intent(this, UserRegisterActivity.class);
         startActivity(intent);
     }

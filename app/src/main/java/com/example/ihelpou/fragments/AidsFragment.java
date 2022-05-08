@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,14 +15,22 @@ import android.widget.ImageButton;
 
 import com.example.ihelpou.BeginingActivity;
 import com.example.ihelpou.GestAid;
+import com.example.ihelpou.GestClassDB;
 import com.example.ihelpou.R;
+import com.example.ihelpou.RecyclerAdapter;
 import com.example.ihelpou.UserRegisterActivity;
+import com.example.ihelpou.models.Aid;
 import com.example.ihelpou.models.User;
+
+import java.util.ArrayList;
 
 public class AidsFragment extends Fragment {
 
     private ImageButton addAidBtn;
     private User user;
+    private GestClassDB gestClassDB = new GestClassDB();
+    ArrayList<Aid> listAids = new ArrayList<>();
+    RecyclerView listAidsRV;
 
     public AidsFragment() {
     }
@@ -32,13 +42,12 @@ public class AidsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_aids, container, false);
+        listAidsRV = view.findViewById(R.id.listAidsRV);
         addAidBtn = view.findViewById(R.id.addAidBtn);
 
-        Log.e("Hola: ", "------------");
-        Log.e("Key Prueba: ", user.getKey().substring(user.getKey().lastIndexOf("/")+1));
-        Log.e("Hola: ", "------------");
+        listAidsRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        gestClassDB.getAids(user, listAids, listAidsRV);
 
         addAidBtn.setOnClickListener(new View.OnClickListener() {
             @Override

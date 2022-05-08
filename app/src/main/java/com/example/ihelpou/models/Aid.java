@@ -5,6 +5,9 @@ public class Aid {
     String key;
     String description, startTime, finishTime, day;
 
+    public Aid(){
+    }
+
     public Aid(String key, String description, String startTime, String finishTime, String day) {
         this.key = key;
         this.description = description;
