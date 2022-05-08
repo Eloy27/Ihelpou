@@ -4,65 +4,44 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    //int key, age;
-    //String  name, username, password, surname, address, phone, email;
+    String key;
+    String  name, username, password, surname, phone, address;
+    int age;
+    String email;
     //private Bitmap avatar;
-
-    String username, password;
 
     public User() {
     }
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
- /*
-    public User(String name, String username, String password) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
-    }
-
-    public User(int id, int age, String name, String username, String password, String surname, String address, String phone, String email) {
-        this.id = id;
-        this.age = age;
+    public User(String name, String username, String password, String surname, String phone, String address, int age, String email) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.surname = surname;
-        this.address = address;
         this.phone = phone;
+        this.address = address;
+        this.age = age;
         this.email = email;
     }
 
-   public User(int id, int age, String name, String username, String password, String surname, String address, String phone, String email, Bitmap avatar) {
-        this.id = id;
-        this.age = age;
+    public User(String key, String name, String username, String password, String surname, String phone, String address, int age, String email) {
+        this.key = key;
         this.name = name;
         this.username = username;
         this.password = password;
         this.surname = surname;
-        this.address = address;
         this.phone = phone;
-        this.email = email;
-        this.avatar = avatar;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
+        this.address = address;
         this.age = age;
+        this.email = email;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {
@@ -71,7 +50,7 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }*/
+    }
 
     public String getUsername() {
         return username;
@@ -89,20 +68,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    /*public String getSurname() {
+    public String getSurname() {
         return surname;
     }
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getPhone() {
@@ -113,6 +84,22 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -120,12 +107,4 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public Bitmap getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(Bitmap avatar) {
-        this.avatar = avatar;
-    }*/
 }

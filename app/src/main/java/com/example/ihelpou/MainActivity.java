@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.ihelpou.models.User;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText usernameET, passwordET;
@@ -40,9 +42,10 @@ public class MainActivity extends AppCompatActivity {
     }
     
     public void btnLogin(View view){
-        gestClassDB.selectUser(usernameET.getText().toString(), passwordET.getText().toString());
-        if (gestClassDB.exists){
+        User user = gestClassDB.checkUser(usernameET.getText().toString(), passwordET.getText().toString());
+        if (user != null){
             Intent intent = new Intent(this, BeginingActivity.class);
+            intent.putExtra("user", user);
             startActivity(intent);
         }
         else{

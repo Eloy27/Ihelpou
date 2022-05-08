@@ -1,22 +1,25 @@
 package com.example.ihelpou;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.ihelpou.models.Aid;
 import com.example.ihelpou.models.User;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class GestAid extends AppCompatActivity {
 
@@ -27,6 +30,8 @@ public class GestAid extends AppCompatActivity {
     private boolean firstDatePut = false;
     private GestClassDB gestClassDB = new GestClassDB();
     private User user;
+    private ArrayList<String> days = new ArrayList<>();
+    private int hour, minute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,7 @@ public class GestAid extends AppCompatActivity {
         descriptionET = findViewById(R.id.descriptionET);
         calendarBtn = findViewById(R.id.calendarBtn);
         calendarBtn.setImageResource(R.drawable.calendar);
-        moreDaysRB.setChecked(true);
+        especificDayRB.setChecked(true);
 
         especificDayRB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,11 +110,34 @@ public class GestAid extends AppCompatActivity {
         }
     }
 
+    public void popTimePicker(View v){
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourTPD, int minuteTPD) {
+                hour = hourTPD;
+                minute = minuteTPD;
+                switch(v.getId()){
+                    case R.id.startTimeET:
+                        startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        break;
+                    case R.id.finishTimeET:
+                        finishTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        break;
+                }
+            }
+        };
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, minute, true);
+        timePickerDialog.setTitle("Select Time");
+        timePickerDialog.show();
+    }
+
     public void createAid(View view){
-        Aid aid = new Aid(descriptionET.getText().toString());
+        Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString());
         gestClassDB.addAid(aid, user).addOnSuccessListener(suc ->
         {
             Intent intent = new Intent(this, BeginingActivity.class);
+            intent.putExtra("user", user);
             startActivity(intent);
             Toast.makeText(this, "Aid added successfully", Toast.LENGTH_SHORT).show();
 

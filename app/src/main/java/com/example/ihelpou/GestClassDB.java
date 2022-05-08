@@ -1,7 +1,5 @@
 package com.example.ihelpou;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.example.ihelpou.models.Aid;
@@ -16,7 +14,7 @@ import com.google.firebase.database.ValueEventListener;
 public class GestClassDB {
 
     final DatabaseReference databaseReference;
-    protected boolean exists = false;
+    private User objectUser = null;
 
     public GestClassDB(){
         FirebaseDatabase fd = FirebaseDatabase.getInstance();
@@ -28,29 +26,22 @@ public class GestClassDB {
     }
 
     public Task<Void> addAid(Aid aid, User user){
-        //return databaseReference.child("User").push().setValue(aid);
-        return null;
+        return databaseReference.child("User").child(user.getKey().substring(user.getKey().lastIndexOf("/")+1)).child("Aids").push().setValue(aid);
     }
 
-    public void selectUser(String username, String password){
+    public User checkUser(String username, String password){
         databaseReference.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.e("Key: ", String.valueOf(databaseReference.child("User").child(snapshot.getKey())));
                     databaseReference.child("User").child(snapshot.getKey()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             User user = snapshot.getValue(User.class);
-
-                            Log.e("Username: ", user.getUsername());
-                            Log.e("Password: ", user.getPassword());
-
-                            Log.e("Username Introduced: ", username);
-                            Log.e("Password Introduced: ", password);
-
                             if (user.getUsername().equals(username) && user.getPassword().equals(password)){
-                                exists = true;
+                                objectUser = new User(String.valueOf(databaseReference.child("User").child(snapshot.getKey())),
+                                        user.getName(), user.getUsername(), user.getPassword(), user.getSurname(),
+                                        user.getPhone(), user.getAddress(), user.getAge(), user.getEmail());
                             }
                         }
                         @Override
@@ -64,5 +55,6 @@ public class GestClassDB {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+        return objectUser;
     }
 }

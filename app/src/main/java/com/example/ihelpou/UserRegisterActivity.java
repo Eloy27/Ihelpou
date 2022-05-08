@@ -44,8 +44,10 @@ public class UserRegisterActivity extends AppCompatActivity {
     }
 
     public void createUser(View view){
-        User user = new User(usernameET.getText().toString(), passwordET.getText().toString());
-        //User user = new User(1, Integer.parseInt(ageET.getText().toString()), nameET.getText().toString(), usernameET.getText().toString(), passwordET.getText().toString(), surnameET.getText().toString(), addressET.getText().toString(), phoneET.getText().toString(), emailET.getText().toString());
+        User user = new User(nameET.getText().toString(), usernameET.getText().toString(), passwordET.getText().toString(),
+                surnameET.getText().toString(), phoneET.getText().toString(), addressET.getText().toString(),
+                Integer.parseInt(ageET.getText().toString()), emailET.getText().toString());
+
         gestClassDB.addUser(user).addOnSuccessListener(suc ->
         {
             Intent intent = new Intent(this, MainActivity.class);

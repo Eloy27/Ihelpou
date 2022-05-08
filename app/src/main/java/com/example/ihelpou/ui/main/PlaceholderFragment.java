@@ -16,6 +16,7 @@ import com.example.ihelpou.R;
 import com.example.ihelpou.databinding.FragmentBeginingBinding;
 import com.example.ihelpou.fragments.AidsFragment;
 import com.example.ihelpou.fragments.HelpSeekerFragment;
+import com.example.ihelpou.models.User;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -26,12 +27,13 @@ public class PlaceholderFragment extends Fragment {
 
     private PageViewModel pageViewModel;
     private FragmentBeginingBinding binding;
+    private User user;
 
-    public static Fragment newInstance(int index) {
+    public static Fragment newInstance(int index, User user) {
         Fragment fragment = null;
         switch (index){
             case 1:
-                fragment = new AidsFragment();
+                fragment = new AidsFragment(user);
                 break;
             case 2:
                 fragment = new HelpSeekerFragment();

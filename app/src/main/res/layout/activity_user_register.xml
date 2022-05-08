@@ -98,19 +98,20 @@
                 tools:ignore="TouchTargetSizeCheck" />
 
             <EditText
-                android:id="@+id/addressET"
+                android:id="@+id/surnameET"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="10dp"
                 android:ems="10"
-                android:hint="Address"
+                android:hint="Surname"
                 android:inputType="textPersonName"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.502"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/surnameET"
+                app:layout_constraintTop_toBottomOf="@+id/passwordET"
                 tools:ignore="TouchTargetSizeCheck" />
+
 
             <EditText
                 android:id="@+id/phoneET"
@@ -127,19 +128,21 @@
                 app:layout_constraintTop_toBottomOf="@+id/addressET"
                 tools:ignore="TouchTargetSizeCheck" />
 
+
+
             <EditText
-                android:id="@+id/surnameET"
+                android:id="@+id/addressET"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="10dp"
                 android:ems="10"
-                android:hint="Surname"
+                android:hint="Address"
                 android:inputType="textPersonName"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.502"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passwordET"
+                app:layout_constraintTop_toBottomOf="@+id/surnameET"
                 tools:ignore="TouchTargetSizeCheck" />
 
 
