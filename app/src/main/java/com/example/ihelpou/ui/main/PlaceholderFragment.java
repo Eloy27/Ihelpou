@@ -12,31 +12,27 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.ihelpou.R;
+import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.databinding.FragmentBeginingBinding;
 import com.example.ihelpou.fragments.AidsFragment;
 import com.example.ihelpou.fragments.HelpSeekerFragment;
 import com.example.ihelpou.models.User;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-
     private PageViewModel pageViewModel;
     private FragmentBeginingBinding binding;
-    private User user;
+    private static GestClassDB gestClassDB = new GestClassDB();
 
     public static Fragment newInstance(int index, User user) {
         Fragment fragment = null;
-        switch (index){
+        switch (index) {
             case 1:
                 fragment = new AidsFragment(user);
                 break;
             case 2:
-                fragment = new HelpSeekerFragment();
+                fragment = new HelpSeekerFragment(user);
                 break;
         }
         return fragment;

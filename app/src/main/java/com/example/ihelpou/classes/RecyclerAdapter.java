@@ -1,6 +1,6 @@
-package com.example.ihelpou;
+package com.example.ihelpou.classes;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ihelpou.R;
 import com.example.ihelpou.models.Aid;
 
 import java.util.ArrayList;
@@ -17,9 +18,11 @@ import java.util.ArrayList;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.AidsViewHolder>{
 
     private ArrayList<Aid> listAids;
+    private Context c;
 
-    public RecyclerAdapter(ArrayList<Aid> listAids){
+    public RecyclerAdapter(ArrayList<Aid> listAids, Context c){
         this.listAids = listAids;
+        this.c = c;
     }
 
     @NonNull
@@ -34,7 +37,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.AidsVi
         holder.startTimeTV.setText("From: "+listAids.get(position).getStartTime());
         holder.finishTimeTV.setText("To: "+listAids.get(position).getFinishTime());
         holder.dayTV.setText("Day: "+listAids.get(position).getDay());
-        //holder.pictureIV.setText("From: "+listAids.get(position).getPicture().toString());
+        holder.pictureIV.setImageResource(R.drawable.avatar);
     }
 
     @Override

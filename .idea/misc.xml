@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_available_days_register.xml" value="0.22" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_begining.xml" value="0.22" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_choose.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_gest_aid.xml" value="0.22" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_gest_available_days.xml" value="0.22" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_help_seeker_register.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_register.xml" value="0.36666666666666664" />
@@ -14,7 +16,8 @@
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_aids.xml" value="0.18" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_begining.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_help_seeker.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/itemlist_row.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_want_helper.xml" value="0.1675929884566054" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/itemlist_row.xml" value="0.33" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/listacanciones_row.xml" value="0.20416666666666666" />
       </map>
     </option>

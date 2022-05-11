@@ -1,8 +1,10 @@
-package com.example.ihelpou;
+package com.example.ihelpou.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.ihelpou.fragments.AidsFragment;
 import com.example.ihelpou.models.User;
 import com.google.android.material.tabs.TabLayout;
 
@@ -32,6 +34,24 @@ public class BeginingActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.e("tabSelected: ", tab.getPosition()+"");
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                Log.e("tabUnselected: ", tab.getPosition()+"");
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                Log.e("tabReselected: ", tab.getPosition()+"");
+            }
+        });
+
 
     }
 

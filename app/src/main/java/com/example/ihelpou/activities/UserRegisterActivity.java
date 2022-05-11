@@ -1,4 +1,4 @@
-package com.example.ihelpou;
+package com.example.ihelpou.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.ihelpou.R;
+import com.example.ihelpou.activities.MainActivity;
+import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.models.User;
 
 public class UserRegisterActivity extends AppCompatActivity {

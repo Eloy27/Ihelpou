@@ -1,4 +1,4 @@
-package com.example.ihelpou;
+package com.example.ihelpou.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,7 +6,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -14,6 +13,9 @@ import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.ihelpou.activities.BeginingActivity;
+import com.example.ihelpou.R;
+import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.models.Aid;
 import com.example.ihelpou.models.User;
 
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class GestAid extends AppCompatActivity {
+public class GestAidActivity extends AppCompatActivity {
 
     private EditText descriptionET, startTimeET, finishTimeET, firstDateET, secondDateET;
     private RadioButton especificDayRB, moreDaysRB;

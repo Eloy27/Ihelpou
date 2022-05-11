@@ -1,4 +1,4 @@
-package com.example.ihelpou;
+package com.example.ihelpou.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.ihelpou.models.User;
+import com.example.ihelpou.R;
+import com.example.ihelpou.classes.GestClassDB;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,14 +42,6 @@ public class MainActivity extends AppCompatActivity {
     }
     
     public void btnLogin(View view){
-        User user = gestClassDB.checkUser(usernameET.getText().toString(), passwordET.getText().toString());
-        if (user != null){
-            Intent intent = new Intent(this, BeginingActivity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
-        }
-        else{
-            Toast.makeText(this, "This user doesn't exist", Toast.LENGTH_SHORT).show();
-        }
+        gestClassDB.checkUser(usernameET.getText().toString(), passwordET.getText().toString(), this);
     }
 }
