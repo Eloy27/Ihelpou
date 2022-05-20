@@ -6,176 +6,131 @@
     android:layout_height="match_parent"
     tools:context=".activities.GestAidActivity">
 
-    <ImageButton
-        android:id="@+id/backBtn"
-        android:layout_width="48dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="#00FFFFFF"
-        android:onClick="comeBack"
-        android:scaleType="fitCenter"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/volver"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-
-    <EditText
-        android:id="@+id/secondDateET"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="53dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="58dp"
-        android:clickable="false"
-        android:ems="10"
-        android:enabled="false"
-        android:inputType="textPersonName"
-        android:text="To"
-        android:textColor="@color/design_default_color_error"
-        android:textColorHint="@color/design_default_color_error"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstDateET" />
-
-    <RadioButton
-        android:id="@+id/especificDayRB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="47dp"
-        android:text="Especific Day"
-        android:textSize="18sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/moreDaysRB"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/finishTimeET" />
-
-    <EditText
-        android:id="@+id/finishTimeET"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Finish Time"
-        android:inputType="time"
-        android:onClick="popTimePicker"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startTimeET"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-    <EditText
-        android:id="@+id/descriptionET"
-        android:layout_width="match_parent"
-        android:layout_height="116dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Description"
-        android:inputType="textMultiLine"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/firstDateET"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="58dp"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Select a day"
-        android:inputType="textPersonName"
-        android:onClick="putDate"
-        android:textColor="@color/design_default_color_error"
-        android:textSize="24sp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/finishTimeET"
-        tools:ignore="Deprecated" />
-
-    <ImageButton
-        android:id="@+id/calendarBtn"
-        android:layout_width="68dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="24dp"
-        android:background="#00FFFFFF"
-        android:onClick="putDate"
-        android:scaleType="fitCenter"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/moreDaysRB"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toEndOf="@+id/especificDayRB"
-        app:layout_constraintTop_toBottomOf="@+id/finishTimeET"
-        tools:ignore="SpeakableTextPresentCheck"
-        tools:srcCompat="@drawable/calendar" />
-
-    <EditText
-        android:id="@+id/startTimeET"
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Start Time"
-        android:inputType="time"
-        android:onClick="popTimePicker"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.288"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionET"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-    <RadioButton
-        android:id="@+id/moreDaysRB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="56dp"
-        android:text="More Days"
-        android:textSize="18sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/especificDayRB"
-        app:layout_constraintTop_toBottomOf="@+id/finishTimeET" />
-
-    <ImageButton
-        android:id="@+id/createBtn"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="#00FFFFFF"
-        android:onClick="createAid"
-        android:scaleType="centerInside"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/add"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/titleAid"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/akaya_telivigala"
+            android:text="Add your Aid"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:backgroundTint="#00FFFFFF"
+            android:onClick="comeBack"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/volver"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/descriptionET"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_below="@+id/titleAid"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            android:ems="10"
+            android:fontFamily="@font/akaya_telivigala"
+            android:gravity="top"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/startTimeET"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@+id/descriptionET"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="33dp"
+            android:layout_marginEnd="10dp"
+            android:ems="10"
+            android:focusable="false"
+            android:fontFamily="@font/akaya_telivigala"
+            android:gravity="top"
+            android:hint="Start Time"
+            android:inputType="time"
+            android:onClick="popTimePicker"
+            android:textSize="30sp"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/finishTimeET"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@+id/startTimeET"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="10dp"
+            android:ems="10"
+            android:focusable="false"
+            android:fontFamily="@font/akaya_telivigala"
+            android:gravity="top"
+            android:hint="Finish Time"
+            android:inputType="time"
+            android:onClick="popTimePicker"
+            android:textSize="30sp"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/firstDateET"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@+id/finishTimeET"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:ems="10"
+            android:focusable="false"
+            android:fontFamily="@font/akaya_telivigala"
+            android:gravity="top"
+            android:hint="Select a day"
+            android:inputType="textPersonName"
+            android:onClick="putDate"
+            android:textColor="@color/design_default_color_error"
+            android:textSize="30sp"
+            android:visibility="visible"
+            tools:ignore="Deprecated" />
+
+        <ImageButton
+            android:id="@+id/okBtn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="28dp"
+            android:layout_marginBottom="28dp"
+            android:background="#00FFFFFF"
+            android:onClick="createAid"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/check"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

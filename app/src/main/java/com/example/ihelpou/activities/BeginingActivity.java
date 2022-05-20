@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.ihelpou.fragments.AidsFragment;
 import com.example.ihelpou.models.User;
 import com.google.android.material.tabs.TabLayout;
 

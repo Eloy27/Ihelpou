@@ -11,38 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listAidsAvailablesRV"
+        <ListView
+            android:id="@+id/listAidsLV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="2dp"
-            android:backgroundTint="#00FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.461"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.432">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            android:divider="@null" />
 
         <ImageButton
             android:id="@+id/addAidBtn"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_alignEnd="@+id/listAidsAvailablesRV"
+            android:layout_alignEnd="@+id/listAidsLV"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="18dp"
             android:layout_marginBottom="18dp"
             android:backgroundTint="#00FFFFFF"
             android:scaleType="centerCrop"
-            android:src="@drawable/addhelp"
+            android:src="@drawable/add"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

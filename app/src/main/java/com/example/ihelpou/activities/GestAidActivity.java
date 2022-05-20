@@ -26,8 +26,6 @@ import java.util.Locale;
 public class GestAidActivity extends AppCompatActivity {
 
     private EditText descriptionET, startTimeET, finishTimeET, firstDateET, secondDateET;
-    private RadioButton especificDayRB, moreDaysRB;
-    private ImageButton calendarBtn;
     private int day = 01, month = 01, year = 2022;
     private boolean firstDatePut = false;
     private GestClassDB gestClassDB = new GestClassDB();
@@ -41,46 +39,16 @@ public class GestAidActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gest_aid);
 
         Intent i = getIntent();
-        user = (User)i.getSerializableExtra("user");
+        user = (User) i.getSerializableExtra("user");
 
         descriptionET = findViewById(R.id.descriptionET);
         startTimeET = findViewById(R.id.startTimeET);
         finishTimeET = findViewById(R.id.finishTimeET);
         firstDateET = findViewById(R.id.firstDateET);
-        secondDateET = findViewById(R.id.secondDateET);
-        especificDayRB = findViewById(R.id.especificDayRB);
-        moreDaysRB = findViewById(R.id.moreDaysRB);
         descriptionET = findViewById(R.id.descriptionET);
-        calendarBtn = findViewById(R.id.calendarBtn);
-        calendarBtn.setImageResource(R.drawable.calendar);
-        especificDayRB.setChecked(true);
-
-        especificDayRB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (especificDayRB.isChecked()){
-                    moreDaysRB.setChecked(false);
-                    secondDateET.setVisibility(View.INVISIBLE);
-                    firstDateET.setText("Select a day");
-                    secondDateET.setText("");
-                }
-            }
-        });
-
-        moreDaysRB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (moreDaysRB.isChecked()){
-                    especificDayRB.setChecked(false);
-                    secondDateET.setVisibility(View.VISIBLE);
-                    firstDateET.setText("From");
-                    secondDateET.setText("To");
-                }
-            }
-        });
     }
 
-    public void comeBack(View view){
+    public void comeBack(View view) {
         onBackPressed();
     }
 
@@ -90,35 +58,22 @@ public class GestAidActivity extends AppCompatActivity {
         month = c.get(Calendar.MONTH);
         year = c.get(Calendar.YEAR);
 
-        if (especificDayRB.isChecked()){
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> firstDateET.setText(day + "/" + (month + 1) + "/" + year), day, month, year);
-            datePickerDialog.updateDate(2022, 01, 01);
-            datePickerDialog.show();
-            secondDateET.setText("");
-        }
-        else{
-            if (!firstDatePut) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> firstDateET.setText(day + "/" + (month + 1) + "/" + year), day, month, year);
-                datePickerDialog.updateDate(2022, 01, 01);
-                datePickerDialog.show();
-                firstDatePut = true;
-            }
-            else {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> secondDateET.setText(day + "/" + (month + 1) + "/" + year), day, month, year);
-                datePickerDialog.updateDate(2022, 01, 01);
-                datePickerDialog.show();
-                firstDatePut = false;
-            }
-        }
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> firstDateET.setText(day + "/" + (month + 1) + "/" + year), day, month, year);
+        datePickerDialog.updateDate(2022, 01, 01);
+        datePickerDialog.show();
+        firstDatePut = true;
+
+
     }
 
-    public void popTimePicker(View v){
+    public void popTimePicker(View v) {
         TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourTPD, int minuteTPD) {
                 hour = hourTPD;
                 minute = minuteTPD;
-                switch(v.getId()){
+                switch (v.getId()) {
                     case R.id.startTimeET:
                         startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
                         break;
@@ -134,18 +89,8 @@ public class GestAidActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
-    public void createAid(View view){
-        Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString());
-        gestClassDB.addAid(aid, user).addOnSuccessListener(suc ->
-        {
-            Intent intent = new Intent(this, BeginingActivity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
-            Toast.makeText(this, "Aid added successfully", Toast.LENGTH_SHORT).show();
-
-        }).addOnFailureListener(err ->
-        {
-            Toast.makeText(this, err.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+    public void createAid(View view) {
+        Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString(), "no");
+        gestClassDB.registerAid(aid, user, this);
     }
 }

@@ -12,10 +12,29 @@
       android:layout_height="match_parent"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintHorizontal_bias="1.0"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="1.0">
+      app:layout_constraintVertical_bias="0.0">
+
+    <TextView
+        android:id="@+id/titleAvailabilityTV"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/akaya_telivigala"
+        android:text="Add your availability"
+        android:textAlignment="center"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/backBtn"
@@ -34,18 +53,19 @@
         android:id="@+id/startTimeET"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:layout_below="@+id/titleAvailabilityTV"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
         android:focusable="false"
+        android:fontFamily="@font/akaya_telivigala"
         android:hint="Start Time"
         android:inputType="time"
         android:onClick="popTimePicker"
-        android:textSize="24sp"
+        android:textSize="30sp"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <EditText
@@ -60,10 +80,11 @@
         android:layout_marginEnd="10dp"
         android:ems="10"
         android:focusable="false"
+        android:fontFamily="@font/akaya_telivigala"
         android:hint="Finish Time"
         android:inputType="time"
         android:onClick="popTimePicker"
-        android:textSize="24sp"
+        android:textSize="30sp"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <TextView
@@ -73,22 +94,33 @@
         android:layout_below="@+id/finishTimeET"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/akaya_telivigala"
         android:text="Availability"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_below="@+id/finishTimeET"
+        android:layout_below="@+id/daysTV"
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="135dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+      <ImageButton
+          android:id="@+id/sundayBtn"
+          android:layout_width="70dp"
+          android:layout_height="70dp"
+          android:layout_weight="1"
+          android:backgroundTint="#00FFFFFF"
+          android:scaleType="centerInside"
+          app:srcCompat="@drawable/sday"
+          tools:ignore="SpeakableTextPresentCheck" />
 
       <ImageButton
           android:id="@+id/mondayBtn"
@@ -150,20 +182,10 @@
           app:srcCompat="@drawable/sday"
           tools:ignore="SpeakableTextPresentCheck" />
 
-      <ImageButton
-          android:id="@+id/sundayBtn"
-          android:layout_width="70dp"
-          android:layout_height="70dp"
-          android:layout_weight="1"
-          android:backgroundTint="#00FFFFFF"
-          android:scaleType="centerInside"
-          app:srcCompat="@drawable/sday"
-          tools:ignore="SpeakableTextPresentCheck" />
-
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/createBtn"
+        android:id="@+id/okBtn"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_alignParentEnd="true"
@@ -171,7 +193,6 @@
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="28dp"
         android:background="#00FFFFFF"
-        android:onClick="createAvailability"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

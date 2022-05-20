@@ -10,10 +10,11 @@ import android.widget.EditText;
 
 import com.example.ihelpou.R;
 import com.example.ihelpou.classes.GestClassDB;
+import com.example.ihelpou.models.User;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText usernameET, passwordET;
+    private EditText emailET, passwordET;
     private Button loginBtn, registerBtn;
     private GestClassDB gestClassDB = new GestClassDB();
 
@@ -22,10 +23,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        usernameET = findViewById(R.id.usernameET);
+        emailET = findViewById(R.id.emailET);
         passwordET = findViewById(R.id.passwordET);
         loginBtn = findViewById(R.id.loginBtn);
         registerBtn = findViewById(R.id.registerBtn);
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User user = new User(emailET.getText().toString(), passwordET.getText().toString());
+                gestClassDB.login(user, getApplication());
+            }
+        });
 
     }
 
@@ -34,14 +51,5 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
         finishAffinity();
         System.exit(0);
-    }
-
-    public void registerBtn(View view) {
-        Intent intent = new Intent(this, UserRegisterActivity.class);
-        startActivity(intent);
-    }
-    
-    public void btnLogin(View view){
-        gestClassDB.checkUser(usernameET.getText().toString(), passwordET.getText().toString(), this);
     }
 }

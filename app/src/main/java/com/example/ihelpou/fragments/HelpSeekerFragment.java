@@ -3,6 +3,7 @@ package com.example.ihelpou.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
-import com.example.ihelpou.activities.GestAidActivity;
 import com.example.ihelpou.activities.GestAvailableDaysActivity;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.R;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class HelpSeekerFragment extends Fragment {
 
-    private Button addAvailabilityBtn;
+    private ImageButton availabilityBtn;
     private User user;
     private GestClassDB gestClassDB = new GestClassDB();
     private ArrayList<Aid> listAidsAvailables = new ArrayList<>();
@@ -36,11 +36,6 @@ public class HelpSeekerFragment extends Fragment {
         this.user = user;
     }
 
-    public static HelpSeekerFragment newInstance(String param1, String param2) {
-        HelpSeekerFragment fragment = new HelpSeekerFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,21 +45,27 @@ public class HelpSeekerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_help_seeker, container, false);
-        listAidsAvailablesRV = view.findViewById(R.id.listAidsAvailablesRV);
-        addAvailabilityBtn = view.findViewById(R.id.addAvailabilityBtn);
-
+        listAidsAvailablesRV = view.findViewById(R.id.listAidsLV);
+        availabilityBtn = view.findViewById(R.id.availabilityBtn);
         listAidsAvailablesRV.setLayoutManager(new LinearLayoutManager(getContext()));
+
         gestClassDB.getAidsAccordingAvailability(user, listAidsAvailables, listAidsAvailablesRV, getContext());
+        gestClassDB.checkAvailability(user, availabilityBtn);
 
-
-        addAvailabilityBtn.setOnClickListener(new View.OnClickListener() {
+        availabilityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), GestAvailableDaysActivity.class);
                 intent.putExtra("user", user);
-                startActivity(intent);
+                if (!availabilityBtn.getDrawable().getConstantState().equals(ResourcesCompat.getDrawable(getResources(), R.drawable.add, null).getConstantState())) {
+                    intent.putExtra("openEdit", "yes");
+                    gestClassDB.sendAvailability(user, intent, getContext());
+                } else {
+                    startActivity(intent);
+                }
             }
         });
         return view;
+
     }
 }

@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ihelpou.classes.GestClassDB;
-import com.example.ihelpou.databinding.FragmentBeginingBinding;
+import com.example.ihelpou.databinding.FragmentAidsBinding;
 import com.example.ihelpou.fragments.AidsFragment;
 import com.example.ihelpou.fragments.HelpSeekerFragment;
 import com.example.ihelpou.models.User;
@@ -22,7 +22,7 @@ public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private PageViewModel pageViewModel;
-    private FragmentBeginingBinding binding;
+    private FragmentAidsBinding binding;
     private static GestClassDB gestClassDB = new GestClassDB();
 
     public static Fragment newInstance(int index, User user) {
@@ -54,16 +54,9 @@ public class PlaceholderFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        binding = FragmentBeginingBinding.inflate(inflater, container, false);
+        binding = FragmentAidsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.sectionLabel;
-        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
     }
 

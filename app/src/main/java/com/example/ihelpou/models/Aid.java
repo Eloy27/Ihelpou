@@ -1,26 +1,30 @@
 package com.example.ihelpou.models;
 
-public class Aid {
+import java.io.Serializable;
 
-    String key;
-    String description, startTime, finishTime, day;
+public class Aid implements Serializable {
+
+    private String key;
+    private String description, startTime, finishTime, day;
+    private String done;
 
     public Aid(){
     }
 
-    public Aid(String key, String description, String startTime, String finishTime, String day) {
-        this.key = key;
+    public Aid(String key, String description, String startTime, String finishTime, String day, String done) {
         this.description = description;
         this.startTime = startTime;
         this.finishTime = finishTime;
         this.day = day;
+        this.done = done;
     }
 
-    public Aid(String description, String startTime, String finishTime, String day) {
+    public Aid(String description, String startTime, String finishTime, String day, String done) {
         this.description = description;
         this.startTime = startTime;
         this.finishTime = finishTime;
         this.day = day;
+        this.done = done;
     }
 
     public String getKey() {
@@ -61,5 +65,13 @@ public class Aid {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public String getDone() {
+        return done;
+    }
+
+    public void setDone(String done) {
+        this.done = done;
     }
 }

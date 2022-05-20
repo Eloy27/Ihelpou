@@ -6,216 +6,233 @@
     android:layout_height="match_parent"
     tools:context=".activities.UserRegisterActivity">
 
-    <ImageButton
-        android:id="@+id/backBtn"
-        android:layout_width="62dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#00FFFFFF"
-        android:onClick="comeBack"
-        android:scaleType="fitCenter"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/volver"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-    <TextView
-        android:id="@+id/crteUserAccountTV"
-        android:layout_width="211dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/anton"
-        android:text="Create an User"
-        android:textAlignment="center"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/backBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ScrollView
-        android:id="@+id/fieldsSV"
-        android:layout_width="381dp"
-        android:layout_height="429dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.529"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/crteUserAccountTV">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <EditText
-                android:id="@+id/nameET"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Name"
-                android:inputType="textPersonName"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/crteUserAccountTV"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <EditText
-                android:id="@+id/usernameET"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Username"
-                android:inputType="textPersonName"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nameET"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <EditText
-                android:id="@+id/passwordET"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/usernameET"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <EditText
-                android:id="@+id/surnameET"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Surname"
-                android:inputType="textPersonName"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passwordET"
-                tools:ignore="TouchTargetSizeCheck" />
-
-
-            <EditText
-                android:id="@+id/phoneET"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Phone Number"
-                android:inputType="phone"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addressET"
-                tools:ignore="TouchTargetSizeCheck" />
-
-
-
-            <EditText
-                android:id="@+id/addressET"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Address"
-                android:inputType="textPersonName"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/surnameET"
-                tools:ignore="TouchTargetSizeCheck" />
-
-
-            <EditText
-                android:id="@+id/ageET"
-                android:layout_width="match_parent"
-                android:layout_height="66dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="Age"
-                android:inputType="phone"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/emailET"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <EditText
-                android:id="@+id/emailET"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phoneET"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <ImageButton
-                android:id="@+id/avatarBtn"
-                android:layout_width="match_parent"
-                android:layout_height="83dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp"
-                android:background="#00FFFFFF"
-                android:scaleType="centerInside"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.484"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ageET"
-                app:layout_constraintVertical_bias="0.107"
-                tools:ignore="SpeakableTextPresentCheck"
-                tools:srcCompat="@drawable/avatar" />
-
-
-        </LinearLayout>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/createBtn"
-        android:layout_width="141dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="153dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="164dp"
-        android:backgroundTint="#FF0000"
-        android:onClick="createUser"
-        android:text="Create"
-        android:textSize="20sp"
-        app:cornerRadius="20dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.382"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldsSV"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="62dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#00FFFFFF"
+            android:onClick="comeBack"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/volver"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/crteUserAccountTV"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="75dp"
+            android:layout_toEndOf="@+id/backBtn"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="40sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/akaya_telivigala"
+            android:text="Create an User"
+            android:textAlignment="center" />
+
+        <ScrollView
+            android:id="@+id/fieldsSV"
+            android:layout_width="381dp"
+            android:layout_height="429dp"
+            android:layout_above="@+id/okBtn"
+            android:layout_below="@+id/crteUserAccountTV"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <EditText
+                    android:id="@+id/nameET"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:hint="Name"
+                    android:inputType="textPersonName"
+                    android:textSize="26sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/crteUserAccountTV"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <EditText
+                    android:id="@+id/usernameET"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:hint="Username"
+                    android:inputType="textPersonName"
+                    android:textSize="26sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nameET"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <EditText
+                    android:id="@+id/passwordET"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:textSize="26sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/emailET"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <EditText
+                    android:id="@+id/surnameET"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:hint="Surname"
+                    android:inputType="textPersonName"
+                    android:textSize="26sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/passwordET"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+
+                <EditText
+                    android:id="@+id/phoneET"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:hint="Phone Number"
+                    android:inputType="phone"
+                    android:textSize="26sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addressET"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+
+                <EditText
+                    android:id="@+id/addressET"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:hint="Address"
+                    android:inputType="textPersonName"
+                    android:textSize="26sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/surnameET"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+
+                <EditText
+                    android:id="@+id/ageET"
+                    android:layout_width="match_parent"
+                    android:layout_height="66dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:hint="Age"
+                    android:inputType="phone"
+                    android:textSize="26sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/emailET"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <EditText
+                    android:id="@+id/emailET"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:textSize="26sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/phoneET"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <ImageButton
+                    android:id="@+id/avatarBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="83dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="#00FFFFFF"
+                    android:scaleType="centerInside"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.484"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ageET"
+                    app:layout_constraintVertical_bias="0.107"
+                    tools:ignore="SpeakableTextPresentCheck"
+                    tools:srcCompat="@drawable/avatar" />
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/okBtn"
+            android:layout_width="141dp"
+            android:layout_height="59dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="110dp"
+            android:layout_marginEnd="110dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="#FF0000"
+            android:fontFamily="@font/akaya_telivigala"
+            android:text="Create"
+            android:textSize="34sp"
+            app:cornerRadius="20dp" />
+
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

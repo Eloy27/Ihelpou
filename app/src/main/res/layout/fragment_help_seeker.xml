@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D9FFFF"
+    android:background="#FFD9E6"
     tools:context=".fragments.HelpSeekerFragment">
 
     <RelativeLayout
@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listAidsAvailablesRV"
+            android:id="@+id/listAidsLV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
@@ -32,15 +32,21 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/addAvailabilityBtn"
-            android:layout_width="191dp"
-            android:layout_height="75dp"
-            android:layout_alignParentStart="true"
+        <ImageButton
+            android:id="@+id/availabilityBtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignEnd="@+id/listAidsLV"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="117dp"
-            android:layout_marginBottom="29dp"
-            android:text="Add Availability"
-            android:textSize="20sp" />
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="18dp"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="centerCrop"
+            android:src="@drawable/add"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
     </RelativeLayout>
 </FrameLayout>

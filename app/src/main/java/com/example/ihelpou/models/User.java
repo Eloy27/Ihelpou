@@ -3,17 +3,34 @@ package com.example.ihelpou.models;
 import java.io.Serializable;
 
 public class User implements Serializable {
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", surname='" + surname + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", age=" + age +
+                '}';
+    }
 
-    String key;
-    String  name, username, password, surname, phone, address;
-    int age;
-    String email;
+    private String email, name, username, password, surname, phone, address;
+    private int age;
     //private Bitmap avatar;
 
     public User() {
     }
 
-    public User(String name, String username, String password, String surname, String phone, String address, int age, String email) {
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+
+    public User(String email, String name, String username, String password, String surname, String phone, String address, int age) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -22,26 +39,6 @@ public class User implements Serializable {
         this.address = address;
         this.age = age;
         this.email = email;
-    }
-
-    public User(String key, String name, String username, String password, String surname, String phone, String address, int age, String email) {
-        this.key = key;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.surname = surname;
-        this.phone = phone;
-        this.address = address;
-        this.age = age;
-        this.email = email;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getName() {

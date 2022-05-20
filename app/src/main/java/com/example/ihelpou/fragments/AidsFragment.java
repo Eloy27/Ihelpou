@@ -10,9 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.ihelpou.activities.BeginingActivity;
 import com.example.ihelpou.activities.GestAidActivity;
+import com.example.ihelpou.activities.HelpersActivity;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.R;
 import com.example.ihelpou.models.Aid;
@@ -26,7 +31,7 @@ public class AidsFragment extends Fragment {
     private User user;
     private GestClassDB gestClassDB = new GestClassDB();
     private ArrayList<Aid> listAids = new ArrayList<>();
-    private RecyclerView listAidsRV;
+    private ListView listAidsLV;
 
     public AidsFragment() {
     }
@@ -44,11 +49,10 @@ public class AidsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aids, container, false);
-        listAidsRV = view.findViewById(R.id.listAidsAvailablesRV);
+        listAidsLV = view.findViewById(R.id.listAidsLV);
         addAidBtn = view.findViewById(R.id.addAidBtn);
 
-        listAidsRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        gestClassDB.getAids(user, listAids, listAidsRV, getContext());
+        gestClassDB.getAids(user, listAids, listAidsLV, getContext());
 
         addAidBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +62,19 @@ public class AidsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        listAidsLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Aid aid = listAids.get(position);
+                Intent intent = new Intent(getContext(), HelpersActivity.class);
+                intent.putExtra("aid", aid);
+                intent.putExtra("user", user);
+                startActivity(intent);
+
+            }
+        });
+
         return view;
     }
 

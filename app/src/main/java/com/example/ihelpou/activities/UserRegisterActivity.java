@@ -2,16 +2,13 @@ package com.example.ihelpou.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.ihelpou.R;
-import com.example.ihelpou.activities.MainActivity;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.models.User;
 
@@ -39,27 +36,22 @@ public class UserRegisterActivity extends AppCompatActivity {
 
         avatarBtn = findViewById(R.id.avatarBtn);
         avatarBtn.setImageResource(R.drawable.avatar);
-        createBtn = findViewById(R.id.createBtn);
+        createBtn = findViewById(R.id.okBtn);
+
+        createBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User user = new User(emailET.getText().toString(), nameET.getText().toString(), usernameET.getText().toString(), passwordET.getText().toString(),
+                        surnameET.getText().toString(), phoneET.getText().toString(), addressET.getText().toString(),
+                        Integer.parseInt(ageET.getText().toString()));
+
+                gestClassDB.registerUser(user, getApplicationContext());
+            }
+        });
     }
 
     public void comeBack(View view){
         onBackPressed();
     }
 
-    public void createUser(View view){
-        User user = new User(nameET.getText().toString(), usernameET.getText().toString(), passwordET.getText().toString(),
-                surnameET.getText().toString(), phoneET.getText().toString(), addressET.getText().toString(),
-                Integer.parseInt(ageET.getText().toString()), emailET.getText().toString());
-
-        gestClassDB.addUser(user).addOnSuccessListener(suc ->
-        {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            Toast.makeText(this, "User added successfully", Toast.LENGTH_SHORT).show();
-
-        }).addOnFailureListener(err ->
-        {
-            Toast.makeText(this, err.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-    }
 }
