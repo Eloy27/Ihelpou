@@ -3,37 +3,22 @@ package com.example.ihelpou.models;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    @Override
-    public String toString() {
-        return "User{" +
-                "email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", surname='" + surname + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", age=" + age +
-                '}';
-    }
 
-    private String email, name, username, password, surname, phone, address;
+    private String email, name, username, surname, phone, address;
     private int age;
     //private Bitmap avatar;
 
     public User() {
     }
 
-    public User(String email, String password) {
+    public User(String email) {
         this.email = email;
-        this.password = password;
     }
 
 
-    public User(String email, String name, String username, String password, String surname, String phone, String address, int age) {
+    public User(String email, String name, String username, String surname, String phone, String address, int age) {
         this.name = name;
         this.username = username;
-        this.password = password;
         this.surname = surname;
         this.phone = phone;
         this.address = address;
@@ -55,14 +40,6 @@ public class User implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getSurname() {
@@ -103,5 +80,18 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", surname='" + surname + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

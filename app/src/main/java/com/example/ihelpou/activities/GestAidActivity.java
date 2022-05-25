@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -17,35 +18,67 @@ import com.example.ihelpou.activities.BeginingActivity;
 import com.example.ihelpou.R;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.models.Aid;
+import com.example.ihelpou.models.AvailableDays;
 import com.example.ihelpou.models.User;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class GestAidActivity extends AppCompatActivity {
 
-    private EditText descriptionET, startTimeET, finishTimeET, firstDateET, secondDateET;
+    private EditText descriptionET, startTimeET, finishTimeET, firstDateET;
     private int day = 01, month = 01, year = 2022;
     private boolean firstDatePut = false;
     private GestClassDB gestClassDB = new GestClassDB();
     private User user;
     private ArrayList<String> days = new ArrayList<>();
     private int hour, minute;
+    private String openEdit;
+    private Aid aid;
+    private TextView titleAid;
+    private ImageButton okBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gest_aid);
 
-        Intent i = getIntent();
-        user = (User) i.getSerializableExtra("user");
-
+        titleAid = findViewById(R.id.titleAid);
         descriptionET = findViewById(R.id.descriptionET);
         startTimeET = findViewById(R.id.startTimeET);
         finishTimeET = findViewById(R.id.finishTimeET);
         firstDateET = findViewById(R.id.firstDateET);
-        descriptionET = findViewById(R.id.descriptionET);
+        okBtn = findViewById(R.id.okBtn);
+
+
+        Intent i = getIntent();
+        user = (User) i.getSerializableExtra("user");
+        openEdit = i.getStringExtra("openEdit");
+
+        if (openEdit != null) {
+            titleAid.setText("Edit your aid");
+            aid = (Aid) i.getSerializableExtra("aid");
+            descriptionET.setText(aid.getDescription());
+            startTimeET.setText(aid.getStartTime());
+            finishTimeET.setText(aid.getFinishTime());
+            firstDateET.setText(aid.getDay());
+            okBtn.setImageResource(R.drawable.edit);
+        }
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (openEdit != null) {
+                    Aid aidObject = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString());
+                    gestClassDB.editAid(aidObject, user, getApplicationContext(), aid.getKey());
+                } else {
+                    Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString(), "no", "");
+                    gestClassDB.registerAid(aid, user, getApplicationContext());
+                }
+            }
+        });
     }
 
     public void comeBack(View view) {
@@ -58,13 +91,11 @@ public class GestAidActivity extends AppCompatActivity {
         month = c.get(Calendar.MONTH);
         year = c.get(Calendar.YEAR);
 
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> firstDateET.setText(day + "/" + (month + 1) + "/" + year), day, month, year);
-        datePickerDialog.updateDate(2022, 01, 01);
+        LocalDate currentDate = LocalDate.parse(LocalDate.now().toString());
+        datePickerDialog.updateDate(2022, currentDate.getMonthValue() - 1, currentDate.getDayOfMonth());
         datePickerDialog.show();
         firstDatePut = true;
-
-
     }
 
     public void popTimePicker(View v) {
@@ -87,10 +118,5 @@ public class GestAidActivity extends AppCompatActivity {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, minute, true);
         timePickerDialog.setTitle("Select Time");
         timePickerDialog.show();
-    }
-
-    public void createAid(View view) {
-        Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString(), "no");
-        gestClassDB.registerAid(aid, user, this);
     }
 }

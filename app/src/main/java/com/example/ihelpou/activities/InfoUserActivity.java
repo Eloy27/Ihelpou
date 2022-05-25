@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class InfoHelperActivity extends AppCompatActivity {
+public class InfoUserActivity extends AppCompatActivity {
 
     private static final int REQUEST_CALL = 1;
     private User user, helper;
@@ -34,7 +34,7 @@ public class InfoHelperActivity extends AppCompatActivity {
     private ImageView avatarIV;
     private GestClassDB gestClassDB = new GestClassDB();
     private ImageButton mondayBtn, tuesdayBtn, wednesdayBtn, thursdayBtn, fridayBtn, saturdayBtn, sundayBtn;
-
+    String putButton, where = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +63,20 @@ public class InfoHelperActivity extends AppCompatActivity {
         helper = (User) i.getSerializableExtra("helper");
         user = (User) i.getSerializableExtra("user");
         aid = (Aid) i.getSerializableExtra("aid");
+        putButton = i.getStringExtra("putButton");
+        where = i.getStringExtra("where");
 
-        setInfoHelper(helper);
+
+        if (putButton!=null){
+            callBtn.setVisibility(View.INVISIBLE);
+        }
+
+        if (where.equals("request")) {
+            setInfoUser(helper);
+        }
+        else{
+            setInfoUser(user);
+        }
 
         callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,13 +112,13 @@ public class InfoHelperActivity extends AppCompatActivity {
         }
     }
 
-    public void setInfoHelper(User helper) {
-        nameTV.setText(nameTV.getText()+" "+helper.getName());
-        surnameTV.setText(surnameTV.getText()+" "+helper.getSurname());
-        phoneTV.setText(phoneTV.getText()+" "+helper.getPhone());
-        addressTV.setText(addressTV.getText()+" "+helper.getAddress());
-        ageTV.setText(ageTV.getText()+" "+helper.getAge());
-        gestClassDB.setInfoHelper(helper, startTimeTV, finishTimeTV, mondayBtn, tuesdayBtn, wednesdayBtn, thursdayBtn, fridayBtn, saturdayBtn, sundayBtn);
+    public void setInfoUser(User user) {
+        nameTV.setText(nameTV.getText()+" "+user.getName());
+        surnameTV.setText(surnameTV.getText()+" "+user.getSurname());
+        phoneTV.setText(phoneTV.getText()+" "+user.getPhone());
+        addressTV.setText(addressTV.getText()+" "+user.getAddress());
+        ageTV.setText(ageTV.getText()+" "+user.getAge());
+        gestClassDB.setInfoHelper(user, startTimeTV, finishTimeTV, mondayBtn, tuesdayBtn, wednesdayBtn, thursdayBtn, fridayBtn, saturdayBtn, sundayBtn);
     }
 
     public void comeBack(View view) {
@@ -131,7 +143,7 @@ public class InfoHelperActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //gestClassDB.putAidDone(aid, context);
+                        gestClassDB.aidPending(aid, helper, user, context, where);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

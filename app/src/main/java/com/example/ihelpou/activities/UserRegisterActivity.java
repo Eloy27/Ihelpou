@@ -41,11 +41,11 @@ public class UserRegisterActivity extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = new User(emailET.getText().toString(), nameET.getText().toString(), usernameET.getText().toString(), passwordET.getText().toString(),
+                User user = new User(emailET.getText().toString(), nameET.getText().toString(), usernameET.getText().toString(),
                         surnameET.getText().toString(), phoneET.getText().toString(), addressET.getText().toString(),
                         Integer.parseInt(ageET.getText().toString()));
 
-                gestClassDB.registerUser(user, getApplicationContext());
+                gestClassDB.registerUser(user, passwordET.getText().toString(), getApplicationContext());
             }
         });
     }

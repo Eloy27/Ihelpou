@@ -15,14 +15,22 @@ import com.example.ihelpou.models.User;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static int[] TAB_TITLES;
     private final Context mContext;
     private User user;
+    private int count;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, User user) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm, User user, int count) {
         super(fm);
         this.mContext = context;
         this.user = user;
+        this.count = count;
+        if (count == 2){
+            this.TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+        }
+        else if (count == 3){
+            this.TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
+        }
     }
 
     @Override
@@ -38,6 +46,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return count;
     }
 }

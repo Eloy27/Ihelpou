@@ -7,24 +7,25 @@ public class Aid implements Serializable {
     private String key;
     private String description, startTime, finishTime, day;
     private String done;
+    private String idHelper;
 
     public Aid(){
     }
 
-    public Aid(String key, String description, String startTime, String finishTime, String day, String done) {
+    public Aid(String description, String startTime, String finishTime, String day) {
         this.description = description;
         this.startTime = startTime;
         this.finishTime = finishTime;
         this.day = day;
-        this.done = done;
     }
 
-    public Aid(String description, String startTime, String finishTime, String day, String done) {
+    public Aid(String description, String startTime, String finishTime, String day, String done, String idHelper) {
         this.description = description;
         this.startTime = startTime;
         this.finishTime = finishTime;
         this.day = day;
         this.done = done;
+        this.idHelper = idHelper;
     }
 
     public String getKey() {
@@ -73,5 +74,26 @@ public class Aid implements Serializable {
 
     public void setDone(String done) {
         this.done = done;
+    }
+
+    public String getIdHelper() {
+        return idHelper;
+    }
+
+    public void setIdHelper(String idHelper) {
+        this.idHelper = idHelper;
+    }
+
+    @Override
+    public String toString() {
+        return "Aid{" +
+                "key='" + key + '\'' +
+                ", description='" + description + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", finishTime='" + finishTime + '\'' +
+                ", day='" + day + '\'' +
+                ", done='" + done + '\'' +
+                ", idHelper='" + idHelper + '\'' +
+                '}';
     }
 }

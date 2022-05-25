@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.example.ihelpou.activities.GestAvailableDaysActivity;
 import com.example.ihelpou.classes.GestClassDB;
@@ -27,7 +28,7 @@ public class HelpSeekerFragment extends Fragment {
     private User user;
     private GestClassDB gestClassDB = new GestClassDB();
     private ArrayList<Aid> listAidsAvailables = new ArrayList<>();
-    private RecyclerView listAidsAvailablesRV;
+    private ListView listAidsAvailablesLV;
 
     public HelpSeekerFragment() {
     }
@@ -45,12 +46,11 @@ public class HelpSeekerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_help_seeker, container, false);
-        listAidsAvailablesRV = view.findViewById(R.id.listAidsLV);
+        listAidsAvailablesLV = view.findViewById(R.id.listAidsLV);
         availabilityBtn = view.findViewById(R.id.availabilityBtn);
-        listAidsAvailablesRV.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        gestClassDB.getAidsAccordingAvailability(user, listAidsAvailables, listAidsAvailablesRV, getContext());
-        gestClassDB.checkAvailability(user, availabilityBtn);
+        gestClassDB.getAidsAccordingAvailability(user, listAidsAvailables, listAidsAvailablesLV, getContext());
+        gestClassDB.checkAvailability(user, availabilityBtn, getContext(), "HelpSeekerFragment");
 
         availabilityBtn.setOnClickListener(new View.OnClickListener() {
             @Override

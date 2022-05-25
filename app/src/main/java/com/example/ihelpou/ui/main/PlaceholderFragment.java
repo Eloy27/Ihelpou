@@ -16,6 +16,7 @@ import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.databinding.FragmentAidsBinding;
 import com.example.ihelpou.fragments.AidsFragment;
 import com.example.ihelpou.fragments.HelpSeekerFragment;
+import com.example.ihelpou.fragments.PendingFragment;
 import com.example.ihelpou.models.User;
 
 public class PlaceholderFragment extends Fragment {
@@ -23,7 +24,6 @@ public class PlaceholderFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private PageViewModel pageViewModel;
     private FragmentAidsBinding binding;
-    private static GestClassDB gestClassDB = new GestClassDB();
 
     public static Fragment newInstance(int index, User user) {
         Fragment fragment = null;
@@ -33,6 +33,9 @@ public class PlaceholderFragment extends Fragment {
                 break;
             case 2:
                 fragment = new HelpSeekerFragment(user);
+                break;
+            case 3:
+                fragment = new PendingFragment(user);
                 break;
         }
         return fragment;

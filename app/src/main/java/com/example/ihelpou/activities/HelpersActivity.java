@@ -35,7 +35,6 @@ public class HelpersActivity extends AppCompatActivity {
 
         listHelpersAvailablesRV.setLayoutManager(new LinearLayoutManager(this));
         gestClassDB.getHelpersAccordingAid(listHelpersAvailables, listHelpersAvailablesRV, aid, user, this);
-
     }
 
     public void comeBack(View view){

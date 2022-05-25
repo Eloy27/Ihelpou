@@ -63,18 +63,6 @@ public class AidsFragment extends Fragment {
             }
         });
 
-        listAidsLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Aid aid = listAids.get(position);
-                Intent intent = new Intent(getContext(), HelpersActivity.class);
-                intent.putExtra("aid", aid);
-                intent.putExtra("user", user);
-                startActivity(intent);
-
-            }
-        });
-
         return view;
     }
 

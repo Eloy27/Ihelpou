@@ -28,7 +28,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
     private EditText startTimeET, finishTimeET;
     private int hour, minute;
     private ArrayList<HashMap<String, String>> availableDays = new ArrayList<>();
-    private ImageButton okBtn, mondayBtn, tuesdayBtn, wednesdayBtn, thursdayBtn, fridayBtn, saturdayBtn, sundayBtn;
+    private ImageButton okBtn, mondayBtn, tuesdayBtn, wednesdayBtn, thursdayBtn, fridayBtn, saturdayBtn, sundayBtn, deleteBtn;
     private GestClassDB gestClassDB = new GestClassDB();
     private User user;
     private String openEdit;
@@ -50,6 +50,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
         saturdayBtn = findViewById(R.id.saturdayBtn);
         sundayBtn = findViewById(R.id.sundayBtn);
         okBtn = findViewById(R.id.okBtn);
+        deleteBtn = findViewById(R.id.deleteBtn);
 
         Intent i = getIntent();
         user = (User) i.getSerializableExtra("user");
@@ -152,16 +153,33 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
                 }
             }
         });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (openEdit != null) {
+                    gestClassDB.deleteAvailability(user, getApplicationContext(), availableDay.getKey());
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Introduce your availability", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void comeBack(View view) {
-        onBackPressed();
+        if (openEdit != null) {
+            onBackPressed();
+        } else{
+            Intent intent = new Intent(this, BeginingActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        }
     }
 
     public void onClickBtn(String day, ImageButton button) {
         if (availableDays.size() > 0) {
             AtomicBoolean existsDay = new AtomicBoolean(false);
-            boolean isAvailable = false;
             final int[] posExists = new int[1];
             for (int i = 0; i < availableDays.size(); i++) {
                 int finalI = i;
@@ -192,7 +210,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
                             sundayBtn.setImageResource(R.drawable.sday);
                         }
                     }
-                    else{
+                    else if (s.equals("availability") && o.equals("busy")) {
                         Toast.makeText(this, "This day you are busy", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -200,6 +218,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
                 HashMap<String, String> dayAndAvailability = new HashMap<>();
                 dayAndAvailability.put("availability", "available");
                 dayAndAvailability.put("day", day);
+                dayAndAvailability.put("idAid", "");
                 availableDays.add(dayAndAvailability);
                 if (button.equals(mondayBtn)) {
                     mondayBtn.setImageResource(R.drawable.mondayrojo);
@@ -222,6 +241,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
             HashMap<String, String> dayAndAvailability = new HashMap<>();
             dayAndAvailability.put("availability", "available");
             dayAndAvailability.put("day", day);
+            dayAndAvailability.put("idAid", "");
             availableDays.add(dayAndAvailability);
             if (button.equals(mondayBtn)) {
                 mondayBtn.setImageResource(R.drawable.mondayrojo);

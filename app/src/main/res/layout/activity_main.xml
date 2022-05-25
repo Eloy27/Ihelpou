@@ -84,6 +84,7 @@
                 android:layout_height="60dp"
                 android:layout_marginRight="4dp"
                 android:fontFamily="@font/akaya_telivigala"
+                android:onClick="loginBtn"
                 android:text="Login"
                 android:textSize="26sp"
                 tools:ignore="TouchTargetSizeCheck" />
@@ -95,6 +96,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="0dp"
                 android:fontFamily="@font/akaya_telivigala"
+                android:onClick="registerBtn"
                 android:text="Register"
                 android:textSize="26sp"
                 tools:ignore="TouchTargetSizeCheck" />

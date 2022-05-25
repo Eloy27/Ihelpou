@@ -13,16 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ihelpou.R;
-import com.example.ihelpou.activities.InfoHelperActivity;
+import com.example.ihelpou.activities.InfoUserActivity;
 import com.example.ihelpou.models.Aid;
 import com.example.ihelpou.models.User;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class RecyclerAdapterHelper extends RecyclerView.Adapter<RecyclerAdapterHelper.HelpersViewHolder>{
 
@@ -53,10 +48,11 @@ public class RecyclerAdapterHelper extends RecyclerView.Adapter<RecyclerAdapterH
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(c, InfoHelperActivity.class);
+                Intent i = new Intent(c, InfoUserActivity.class);
                 i.putExtra("helper", listHelpers.get(position));
                 i.putExtra("user", user);
                 i.putExtra("aid", aid);
+                i.putExtra("where", "request");
                 c.startActivity(i);
             }
         });
