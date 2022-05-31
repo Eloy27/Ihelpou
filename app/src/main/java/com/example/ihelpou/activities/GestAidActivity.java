@@ -1,44 +1,55 @@
 package com.example.ihelpou.activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.ihelpou.activities.BeginingActivity;
 import com.example.ihelpou.R;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.models.Aid;
-import com.example.ihelpou.models.AvailableDays;
 import com.example.ihelpou.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class GestAidActivity extends AppCompatActivity {
 
-    private EditText descriptionET, startTimeET, finishTimeET, firstDateET;
+    private EditText descriptionET;
+    private EditText startTimeET, finishTimeET, firstDateET;
     private int day = 01, month = 01, year = 2022;
-    private boolean firstDatePut = false;
     private GestClassDB gestClassDB = new GestClassDB();
     private User user;
-    private ArrayList<String> days = new ArrayList<>();
     private int hour, minute;
     private String openEdit;
     private Aid aid;
     private TextView titleAid;
-    private ImageButton okBtn;
+    private ImageButton okBtn, deleteBtn;
+    private FirebaseFirestore fsDB = FirebaseFirestore.getInstance();
+    private TextInputLayout descriptionTIL, startTimeTIL, finishTimeTIL, firstDateTIL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +58,19 @@ public class GestAidActivity extends AppCompatActivity {
 
         titleAid = findViewById(R.id.titleAid);
         descriptionET = findViewById(R.id.descriptionET);
+        descriptionTIL = findViewById(R.id.descriptionTIL);
         startTimeET = findViewById(R.id.startTimeET);
+        startTimeTIL = findViewById(R.id.startTimeTIL);
         finishTimeET = findViewById(R.id.finishTimeET);
+        finishTimeTIL = findViewById(R.id.finishTimeTIL);
         firstDateET = findViewById(R.id.firstDateET);
+        firstDateTIL = findViewById(R.id.firstDateTIL);
+        deleteBtn = findViewById(R.id.deleteBtn);
         okBtn = findViewById(R.id.okBtn);
 
 
         Intent i = getIntent();
-        user = (User) i.getSerializableExtra("user");
+        getUser(gestClassDB.getEmailActualUser(this));
         openEdit = i.getStringExtra("openEdit");
 
         if (openEdit != null) {
@@ -65,6 +81,7 @@ public class GestAidActivity extends AppCompatActivity {
             finishTimeET.setText(aid.getFinishTime());
             firstDateET.setText(aid.getDay());
             okBtn.setImageResource(R.drawable.edit);
+            deleteBtn.setVisibility(View.VISIBLE);
         }
 
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -79,10 +96,71 @@ public class GestAidActivity extends AppCompatActivity {
                 }
             }
         });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                messageSure("You are going to delete your aid");
+            }
+        });
+
+        descriptionET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                gestClassDB.textChanges(descriptionET, descriptionTIL, descriptionET.getText().toString().matches("[0-9A-zÀ-ÿ ]{5,40}"), "Between 5 and 40 letters or numbers");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    public void messageSure(String message) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        gestClassDB.deleteAid(user, getApplicationContext(), aid.getKey());
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertMessage = alert.create();
+        alertMessage.setTitle("Are you sure?");
+        alertMessage.show();
     }
 
     public void comeBack(View view) {
         onBackPressed();
+    }
+
+    public void getUser(String email) {
+        fsDB.collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> query) {
+                        if (query.isSuccessful()) {
+                            for (QueryDocumentSnapshot objectUser : query.getResult()) {
+                                if (objectUser.getId().equals(email)) {
+                                    user = objectUser.toObject(User.class);
+                                    user.setEmail(email);
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     public void putDate(View view) {
@@ -94,8 +172,8 @@ public class GestAidActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> firstDateET.setText(day + "/" + (month + 1) + "/" + year), day, month, year);
         LocalDate currentDate = LocalDate.parse(LocalDate.now().toString());
         datePickerDialog.updateDate(2022, currentDate.getMonthValue() - 1, currentDate.getDayOfMonth());
+        datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
         datePickerDialog.show();
-        firstDatePut = true;
     }
 
     public void popTimePicker(View v) {
@@ -109,7 +187,18 @@ public class GestAidActivity extends AppCompatActivity {
                         startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
                         break;
                     case R.id.finishTimeET:
-                        finishTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        if (startTimeET.getText().toString().equals("")) {
+                            Toast.makeText(getApplicationContext(), "Introduce a start time first", Toast.LENGTH_SHORT).show();
+                        } else {
+                            LocalTime startTime = LocalTime.parse(startTimeET.getText().toString());
+                            String finishTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+                            LocalTime finishTimeLT = LocalTime.parse(finishTime);
+                            if (startTime.compareTo(finishTimeLT) < 0) {
+                                finishTimeET.setText(finishTime);
+                            } else{
+                                Toast.makeText(getApplicationContext(), "Introduce a valid time", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                         break;
                 }
             }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D9FFFF"
+    tools:context=".fragments.RequestFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/searchTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search your help"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            app:boxCornerRadiusTopStart="40dp"
+            app:boxCornerRadiusBottomEnd="40dp"
+            app:boxCornerRadiusBottomStart="40dp"
+            app:boxCornerRadiusTopEnd="40dp"
+            app:startIconDrawable="@drawable/lupa"
+            app:endIconMode="clear_text"
+
+            app:endIconDrawable="@drawable/quitar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/akaya_telivigala"
+                android:inputType="textFilter"
+                android:textColor="@color/black"
+                android:textSize="24sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ListView
+            android:id="@+id/listAidsLV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/searchTIL"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:divider="@null">
+
+        </ListView>
+
+        <ImageButton
+            android:id="@+id/addAidBtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignEnd="@+id/listAidsLV"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="18dp"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="centerCrop"
+            android:src="@drawable/add"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </RelativeLayout>
+
+</FrameLayout>

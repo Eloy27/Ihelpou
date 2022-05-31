@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/mobile_navigation"
+  app:startDestination="@id/navigation_request" >
+
+  <fragment
+      android:id="@+id/navigation_request"
+      android:name="com.example.ihelpou.fragments.RequestFragment"
+      android:label="@string/title_request"
+      tools:layout="@layout/fragment_request" >
+  </fragment>
+
+  <fragment
+      android:id="@+id/navigation_offer"
+      android:name="com.example.ihelpou.fragments.OfferFragment"
+      android:label="@string/title_offer"
+      tools:layout="@layout/fragment_offer" />
+
+  <fragment
+      android:id="@+id/navigation_pending"
+      android:name="com.example.ihelpou.fragments.UserFragment"
+      android:label="@string/title_pending"
+      tools:layout="@layout/fragment_user" />
+
+</navigation>

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D9FFFF"
-    tools:context=".fragments.AidsFragment">
+    android:background="#FFD9E6"
+    tools:context=".fragments.OfferFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:divider="@null" />
 
         <ImageButton
-            android:id="@+id/addAidBtn"
+            android:id="@+id/availabilityBtn"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_alignEnd="@+id/listAidsLV"
@@ -34,5 +34,4 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
     </RelativeLayout>
-
 </FrameLayout>

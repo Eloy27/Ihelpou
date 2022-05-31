@@ -3,35 +3,47 @@ package com.example.ihelpou.classes;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.ihelpou.R;
-import com.example.ihelpou.activities.BeginingActivity;
 import com.example.ihelpou.activities.GestAvailableDaysActivity;
 import com.example.ihelpou.activities.HelpersActivity;
 import com.example.ihelpou.activities.InfoUserActivity;
-import com.example.ihelpou.databinding.ActivityBeginingBinding;
+import com.example.ihelpou.activities.InitialActivity;
+import com.example.ihelpou.activities.MainActivity;
+import com.example.ihelpou.activities.UserGestActivity;
 import com.example.ihelpou.models.Aid;
 import com.example.ihelpou.models.AvailableDays;
 import com.example.ihelpou.models.User;
-import com.example.ihelpou.ui.main.SectionsPagerAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.api.Distribution;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -57,24 +70,28 @@ public class GestClassDB {
         fsAuth = FirebaseAuth.getInstance();
     }
 
-    public void registerUser(User user, String password, Context c) {
+    public void registerUser(User user, String password, LinearProgressIndicator lpi, Context c) {
+        lpi.setProgressCompat(20, true);
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("name", user.getName());
         userMap.put("username", user.getUsername());
         userMap.put("surname", user.getSurname());
         userMap.put("phone", user.getPhone());
         userMap.put("address", user.getAddress());
-        userMap.put("age", user.getAge());
+        userMap.put("dateOfBirth", user.getDateOfBirth());
+        lpi.setProgressCompat(40, true);
 
         fsAuth.createUserWithEmailAndPassword(user.getEmail(), password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
+                lpi.setProgressCompat(60, true);
                 fsDB.collection("User").document(user.getEmail()).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        lpi.setProgressCompat(80, true);
                         savePreferences(user.getEmail(), password, c);
-                        Intent intent = new Intent(c, BeginingActivity.class);
-                        intent.putExtra("user", user);
+                        lpi.setProgressCompat(100, true);
+                        Intent intent = new Intent(c, InitialActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         c.startActivity(intent);
                         Toast.makeText(c, "User registered successfully", Toast.LENGTH_SHORT).show();
@@ -89,9 +106,214 @@ public class GestClassDB {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(c, "Error registering user", Toast.LENGTH_SHORT).show();
+                if (e.getClass().equals(FirebaseAuthUserCollisionException.class)) {
+                    try {
+                        comeBackTo("UserGestActivity", "login", c, "Email already exists");
+                    } catch (ClassNotFoundException cnfe) {
+                        e.printStackTrace();
+                    }
+                } else if (e.getClass().equals(FirebaseAuthWeakPasswordException.class)) {
+                    try {
+                        comeBackTo("UserGestActivity", "login", c, "Password is too weak");
+                    } catch (ClassNotFoundException cnfe) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        comeBackTo("UserGestActivity", "login", c, "Error registering user");
+                    } catch (ClassNotFoundException cnfe) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         });
+    }
+
+    public void editUser(User user, String oldPassword, String newPassword, String oldEmail, LinearProgressIndicator lpi, Context c) {
+        FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(oldEmail, oldPassword);
+        lpi.setProgressCompat(20, true);
+        fbUser.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            fbUser.updateEmail(user.getEmail()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser fbUser2 = FirebaseAuth.getInstance().getCurrentUser();
+                                        AuthCredential credential2 = EmailAuthProvider
+                                                .getCredential(user.getEmail(), oldPassword);
+                                        lpi.setProgressCompat(40, true);
+
+                                        fbUser2.reauthenticate(credential2)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            lpi.setProgressCompat(60, true);
+
+                                                            fbUser2.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        Log.e("TAG", "Password updated");
+                                                                        Map<String, Object> userMap = new HashMap<>();
+                                                                        userMap.put("name", user.getName());
+                                                                        userMap.put("username", user.getUsername());
+                                                                        userMap.put("surname", user.getSurname());
+                                                                        userMap.put("phone", user.getPhone());
+                                                                        userMap.put("address", user.getAddress());
+                                                                        userMap.put("dateOfBirth", user.getDateOfBirth());
+                                                                        fsDB.collection("User").document(oldEmail).delete();
+                                                                        lpi.setProgressCompat(80, true);
+
+                                                                        fsDB.collection("User").document(user.getEmail()).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void unused) {
+                                                                                lpi.setProgressCompat(100, true);
+                                                                                SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(c);
+                                                                                SharedPreferences.Editor editor = pm.edit();
+                                                                                editor.clear();
+                                                                                editor.apply();
+                                                                                savePreferences(user.getEmail(), newPassword, c);
+                                                                                Intent i = new Intent(c, MainActivity.class);
+                                                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                                c.startActivity(i);
+                                                                                Toast.makeText(c, "User edited successfully", Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                Toast.makeText(c, "Error editing user", Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        });
+                                                                    } else {
+                                                                        Toast.makeText(c, "Failed to update password", Toast.LENGTH_SHORT).show();
+                                                                        try {
+                                                                            comeBackTo("UserGestActivity", "edit", c, null);
+                                                                        } catch (ClassNotFoundException e) {
+                                                                            e.printStackTrace();
+                                                                        }
+                                                                    }
+                                                                }
+                                                            });
+                                                        } else {
+                                                            Toast.makeText(c, "Check your email and old password", Toast.LENGTH_SHORT).show();
+                                                            try {
+                                                                comeBackTo("UserGestActivity", "edit", c, null);
+                                                            } catch (ClassNotFoundException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                    } else {
+                                        Toast.makeText(c, "Failed to update email", Toast.LENGTH_SHORT).show();
+                                        try {
+                                            comeBackTo("UserGestActivity", "edit", c, null);
+                                        } catch (ClassNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(c, "Check your email and old password", Toast.LENGTH_SHORT).show();
+                            try {
+                                comeBackTo("UserGestActivity", "edit", c, null);
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void deleteAccount(User user, Context c, LinearProgressIndicator lpi, RelativeLayout
+            relativeLayout, LinearLayout linearLayout) {
+        fsDB.collection("User").document(user.getEmail()).collection("AvailableDay")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> query) {
+                        lpi.setProgressCompat(20, true);
+                        if (query.getResult().size() != 0) {
+                            if (query.isSuccessful()) {
+                                lpi.setProgressCompat(40, true);
+                                for (QueryDocumentSnapshot objectAvailableDay : query.getResult()) {
+                                    lpi.setProgressCompat(60, true);
+                                    ObjectMapper mapper = new ObjectMapper();
+                                    AvailableDays availableDays = new AvailableDays(objectAvailableDay.getId(), mapper.convertValue(objectAvailableDay.get("day"), ArrayList.class), String.valueOf(objectAvailableDay.get("startTime")), String.valueOf(objectAvailableDay.get("finishTime")));
+                                    boolean busy = false;
+                                    for (HashMap mapDay : availableDays.getAvailableDays()) {
+                                        if (mapDay.get("availability").equals("busy")) {
+                                            busy = true;
+                                        }
+                                    }
+                                    lpi.setProgressCompat(80, true);
+                                    if (busy) {
+                                        relativeLayout.setVisibility(View.VISIBLE);
+                                        linearLayout.setVisibility(View.INVISIBLE);
+                                        Toast.makeText(c, "You can't because you have busy days", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        fsDB.collection("User").document(user.getEmail()).delete()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        lpi.setProgressCompat(100, true);
+                                                        if (task.isSuccessful()) {
+                                                            SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(c);
+                                                            SharedPreferences.Editor editor = pm.edit();
+                                                            editor.clear();
+                                                            editor.apply();
+                                                            Toast.makeText(c, "Your profile has been deleted successfully", Toast.LENGTH_SHORT).show();
+                                                            Intent intent = new Intent(c, MainActivity.class);
+                                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                            c.startActivity(intent);
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
+                        } else {
+                            fsDB.collection("User").document(user.getEmail()).delete()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            lpi.setProgressCompat(40, true);
+                                            if (task.isSuccessful()) {
+                                                lpi.setProgressCompat(100, true);
+                                                SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(c);
+                                                SharedPreferences.Editor editor = pm.edit();
+                                                editor.clear();
+                                                editor.apply();
+                                                Toast.makeText(c, "Your profile has been deleted successfully", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(c, MainActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                c.startActivity(intent);
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
+
+    public void comeBackTo(String activityName, String where, Context c, String putExtra) throws
+            ClassNotFoundException {
+        Intent i = new Intent(c, Class.forName(("com.example.ihelpou.activities." + activityName)));
+        if (where.equals("edit")) {
+            i.putExtra("where", "userfragment");
+        } else if (where.equals("login")) {
+            i.putExtra("error", putExtra);
+        }
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        c.startActivity(i);
     }
 
     public void savePreferences(String email, String password, Context c) {
@@ -114,8 +336,7 @@ public class GestClassDB {
         fsDB.collection("User").document(user.getEmail()).collection("Aid").document().set(aidMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Intent intent = new Intent(c, BeginingActivity.class);
-                intent.putExtra("user", user);
+                Intent intent = new Intent(c, InitialActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 c.startActivity(intent);
                 Toast.makeText(c, "Aid added successfully", Toast.LENGTH_SHORT).show();
@@ -137,8 +358,7 @@ public class GestClassDB {
         fsDB.collection("User").document(user.getEmail()).collection("Aid").document(key).update(aidMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Intent intent = new Intent(c, BeginingActivity.class);
-                intent.putExtra("user", user);
+                Intent intent = new Intent(c, InitialActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 c.startActivity(intent);
                 Toast.makeText(c, "Aid edited successfully", Toast.LENGTH_SHORT).show();
@@ -151,9 +371,12 @@ public class GestClassDB {
         });
     }
 
+    public String getEmailActualUser(Context c) {
+        return PreferenceManager.getDefaultSharedPreferences(c).getString("email", "");
+    }
 
-    public void getAids(User user, ArrayList<Aid> listAids, ListView listAidsLV, Context c) {
-        fsDB.collection("User").document(user.getEmail()).collection("Aid")
+    public void getAids(ArrayList<Aid> listAids, ListView listAidsLV, Context c, ImageButton deleteAidBtn) {
+        fsDB.collection("User").document(getEmailActualUser(c)).collection("Aid")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -164,7 +387,7 @@ public class GestClassDB {
                                 Aid aid = objectAid.toObject(Aid.class);
                                 aid.setKey(objectAid.getId());
                                 listAids.add(aid);
-                                ListAdapter adapter = new ListAdapter(listAids, c, user, 'r');
+                                ListAdapter adapter = new ListAdapter(listAids, c, 'r', deleteAidBtn);
                                 listAidsLV.setAdapter(adapter);
                             }
                         } else {
@@ -182,8 +405,7 @@ public class GestClassDB {
         fsDB.collection("User").document(user.getEmail()).collection("AvailableDay").document().set(availableDayMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Intent intent = new Intent(c, BeginingActivity.class);
-                intent.putExtra("user", user);
+                Intent intent = new Intent(c, InitialActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 c.startActivity(intent);
                 Toast.makeText(c, "Availability added successfully", Toast.LENGTH_SHORT).show();
@@ -204,8 +426,7 @@ public class GestClassDB {
         fsDB.collection("User").document(user.getEmail()).collection("AvailableDay").document(key).update(availableDayMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Intent intent = new Intent(c, BeginingActivity.class);
-                intent.putExtra("user", user);
+                Intent intent = new Intent(c, InitialActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 c.startActivity(intent);
                 Toast.makeText(c, "Availability edited successfully", Toast.LENGTH_SHORT).show();
@@ -243,8 +464,7 @@ public class GestClassDB {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
                                                         Toast.makeText(c, "Your availability has been deleted successfully", Toast.LENGTH_SHORT).show();
-                                                        Intent intent = new Intent(c, BeginingActivity.class);
-                                                        intent.putExtra("user", user);
+                                                        Intent intent = new Intent(c, InitialActivity.class);
                                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                         c.startActivity(intent);
                                                     }
@@ -257,21 +477,50 @@ public class GestClassDB {
                 });
     }
 
-    public void checkAvailability(User user, ImageButton button, Context c, String where) {
-        fsDB.collection("User").document(user.getEmail()).collection("AvailableDay")
+    public void deleteAid(User user, Context c, String key) {
+        fsDB.collection("User").document(user.getEmail()).collection("Aid")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> query) {
                         if (query.isSuccessful()) {
-                            if (where.equals("BeginingActivity") && query.getResult().size() == 0) {
+                            Iterator<QueryDocumentSnapshot> iterator = query.getResult().iterator();
+                            Boolean haveDeleted = false;
+                            for (QueryDocumentSnapshot objectAid : query.getResult()) {
+                                if (query.getResult().size() > 1)
+                                    iterator.next().getId();
+                                Aid aid = objectAid.toObject(Aid.class);
+                                aid.setKey(objectAid.getId());
+                                if (key.contains(aid.getKey())) {
+                                    fsDB.collection("User").document(user.getEmail()).collection("Aid").document(aid.getKey()).delete();
+                                    haveDeleted = true;
+                                }
+                                if (!iterator.hasNext() && haveDeleted) {
+                                    Toast.makeText(c, "Your aid/s has been deleted successfully", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(c, InitialActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    c.startActivity(intent);
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void checkAvailability(ImageButton button, Context c) {
+        fsDB.collection("User").document(getEmailActualUser(c)).collection("AvailableDay")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> query) {
+                        if (query.isSuccessful()) {
+                            if (query.getResult().size() == 0) {
                                 Intent intent = new Intent(c, GestAvailableDaysActivity.class);
-                                intent.putExtra("user", user);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 c.startActivity(intent);
                             }
-                            if (where.equals("HelpSeekerFragment") && query.getResult().size() != 0) {
-                                    button.setImageResource(R.drawable.edit);
+                            if (query.getResult().size() != 0) {
+                                button.setImageResource(R.drawable.edit);
                             }
                         }
                     }
@@ -299,7 +548,7 @@ public class GestClassDB {
                 });
     }
 
-    public void getHelpSeekerAccordingAid(Aid aid, User actualUser, Context c) {
+    public void getHelpSeekerAccordingAid(Aid aid, Context c, String putButton) {
         fsDB.collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -318,10 +567,10 @@ public class GestClassDB {
                                                     for (QueryDocumentSnapshot objectAid : query2.getResult()) {
                                                         if (objectAid.getId().equals(aid.getKey())) {
                                                             Intent i = new Intent(c, InfoUserActivity.class);
-                                                            i.putExtra("helper", actualUser);
                                                             i.putExtra("user", user);
                                                             i.putExtra("aid", aid);
                                                             i.putExtra("where", "offer");
+                                                            i.putExtra("putButton", putButton);
                                                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                             c.startActivity(i);
                                                         }
@@ -336,7 +585,8 @@ public class GestClassDB {
     }
 
 
-    public void getAidsAccordingAvailability(User actualUser, ArrayList<Aid> listAidsAvailables, ListView listAidsAvailablesLV, Context c) {
+    public void getAidsAccordingAvailability(ArrayList<Aid> listAidsAvailables, ListView
+            listAidsAvailablesLV, Context c) {
         fsDB.collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -356,7 +606,7 @@ public class GestClassDB {
                                                         aid.setKey(objectAid.getId());
                                                         LocalTime aidST = LocalTime.parse(aid.getStartTime());
                                                         LocalTime aidFT = LocalTime.parse(aid.getFinishTime());
-                                                        fsDB.collection("User").document(actualUser.getEmail()).collection("AvailableDay")
+                                                        fsDB.collection("User").document(getEmailActualUser(c)).collection("AvailableDay")
                                                                 .get()
                                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                                     @Override
@@ -386,7 +636,7 @@ public class GestClassDB {
                                                                                             if (dayAndAvailability.toString().equals("available")) {
                                                                                                 insert = true;
                                                                                             } else if (dayAndAvailability.toString().equals(aidDayOfWeek) && insert == true) {
-                                                                                                if (!actualUser.getEmail().equals(objectUser.getId()) && aid.getDone().equals("no")) {
+                                                                                                if (!getEmailActualUser(c).equals(objectUser.getId()) && aid.getDone().equals("no")) {
                                                                                                     if (!listAidsAvailables.contains(aid)) {
                                                                                                         listAidsAvailables.add(aid);
                                                                                                     }
@@ -395,7 +645,7 @@ public class GestClassDB {
                                                                                         }
                                                                                     }
 
-                                                                                    ListAdapter adapter = new ListAdapter(listAidsAvailables, c, actualUser, 'o');
+                                                                                    ListAdapter adapter = new ListAdapter(listAidsAvailables, c, 'o', null);
                                                                                     listAidsAvailablesLV.setAdapter(adapter);
                                                                                 }
                                                                             }
@@ -417,7 +667,7 @@ public class GestClassDB {
     }
 
 
-    public void checkHelpersAccordingAid(Aid aid, User actualUser, Context c) {
+    public void checkHelpersAccordingAid(Aid aid, Context c) {
         fsDB.collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -458,10 +708,9 @@ public class GestClassDB {
                                                                     if (dayAndAvailability.toString().equals("available")) {
                                                                         insert = true;
                                                                     } else if (dayAndAvailability.toString().equals(aidDayOfWeek) && insert) {
-                                                                        if (!actualUser.getEmail().equals(objectUser.getId())) {
+                                                                        if (!getEmailActualUser(c).equals(objectUser.getId())) {
                                                                             Intent intent = new Intent(c, HelpersActivity.class);
                                                                             intent.putExtra("aid", aid);
-                                                                            intent.putExtra("user", actualUser);
                                                                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                             c.startActivity(intent);
                                                                             return;
@@ -480,7 +729,8 @@ public class GestClassDB {
                 });
     }
 
-    public void getHelpersAccordingAid(ArrayList<User> listHelpersAvailables, RecyclerView listHelpersAvailablesRV, Aid aid, User actualUser, Context c) {
+    public void getHelpersAccordingAid(ArrayList<User> listHelpersAvailables, RecyclerView
+            listHelpersAvailablesRV, Aid aid, Context c) {
         fsDB.collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -522,14 +772,13 @@ public class GestClassDB {
                                                                 if (dayAndAvailability.toString().equals("available")) {
                                                                     insert = true;
                                                                 } else if (dayAndAvailability.toString().equals(aidDayOfWeek) && insert) {
-                                                                    if (!actualUser.getEmail().equals(objectUser.getId())) {
+                                                                    if (!getEmailActualUser(c).equals(objectUser.getId())) {
                                                                         listHelpersAvailables.add(user);
                                                                     }
                                                                 }
                                                             }
                                                         }
-
-                                                        RecyclerAdapterHelper listHelpersAdapter = new RecyclerAdapterHelper(listHelpersAvailables, c, actualUser, aid);
+                                                        RecyclerAdapterHelper listHelpersAdapter = new RecyclerAdapterHelper(listHelpersAvailables, c, aid);
                                                         listHelpersAvailablesRV.setAdapter(listHelpersAdapter);
                                                     }
                                                 }
@@ -542,7 +791,7 @@ public class GestClassDB {
     }
 
 
-    public void showHelperAccordingAid(Aid aid, User actualUser, Context c) {
+    public void showHelperAccordingAid(Aid aid, Context c) {
         fsDB.collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -555,7 +804,6 @@ public class GestClassDB {
                                 if (aid.getIdHelper().equals(user.getEmail())) {
                                     Intent i = new Intent(c, InfoUserActivity.class);
                                     i.putExtra("helper", user);
-                                    i.putExtra("user", actualUser);
                                     i.putExtra("aid", aid);
                                     i.putExtra("putButton", "no");
                                     i.putExtra("where", "request");
@@ -568,45 +816,61 @@ public class GestClassDB {
                 });
     }
 
-    public void setInfoHelper(User user, TextView startTime, TextView finishTime, ImageButton mondayBtn, ImageButton tuesdayBtn, ImageButton wednesdayBtn, ImageButton thursdayBtn, ImageButton fridayBtn, ImageButton saturdayBtn, ImageButton sundayBtn) {
+    public void setInfoHelper(User user, TextView startTime, TextView finishTime, ImageButton
+            mondayBtn, ImageButton tuesdayBtn, ImageButton wednesdayBtn, ImageButton
+                                      thursdayBtn, ImageButton fridayBtn, ImageButton saturdayBtn, ImageButton sundayBtn, TextView
+                                      titleAvailabilityTV) {
         fsDB.collection("User").document(user.getEmail()).collection("AvailableDay")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> query) {
                         if (query.isSuccessful()) {
-                            for (QueryDocumentSnapshot objectAvailableDay : query.getResult()) {
-                                ObjectMapper mapper = new ObjectMapper();
-                                AvailableDays availableDays = new AvailableDays(objectAvailableDay.getId(), mapper.convertValue(objectAvailableDay.get("day"), ArrayList.class), String.valueOf(objectAvailableDay.get("startTime")), String.valueOf(objectAvailableDay.get("finishTime")));
-                                startTime.setText(startTime.getText() + " " + availableDays.getStartTime());
-                                finishTime.setText(finishTime.getText() + " " + availableDays.getFinishTime());
+                            if (query.getResult().size() != 0) {
+                                for (QueryDocumentSnapshot objectAvailableDay : query.getResult()) {
+                                    ObjectMapper mapper = new ObjectMapper();
+                                    AvailableDays availableDays = new AvailableDays(objectAvailableDay.getId(), mapper.convertValue(objectAvailableDay.get("day"), ArrayList.class), String.valueOf(objectAvailableDay.get("startTime")), String.valueOf(objectAvailableDay.get("finishTime")));
+                                    Log.e("hola", availableDays.getStartTime() + "");
+                                    startTime.setText(startTime.getText() + " " + availableDays.getStartTime());
+                                    finishTime.setText(finishTime.getText() + " " + availableDays.getFinishTime());
 
-                                for (int i = 0; i < availableDays.getAvailableDays().size(); i++) {
-                                    availableDays.getAvailableDays().get(i).forEach((s, o) -> {
-                                        if (o.equals("Monday")) {
-                                            mondayBtn.setImageResource(R.drawable.mondayrojo);
-                                        }
-                                        if (o.equals("Tuesday")) {
-                                            tuesdayBtn.setImageResource(R.drawable.tdayrojo);
-                                        }
-                                        if (o.equals("Wednesday")) {
-                                            wednesdayBtn.setImageResource(R.drawable.wednesdayrojo);
-                                        }
-                                        if (o.equals("Thursday")) {
-                                            thursdayBtn.setImageResource(R.drawable.tdayrojo);
-                                        }
-                                        if (o.equals("Friday")) {
-                                            fridayBtn.setImageResource(R.drawable.fridayrojo);
-                                        }
-                                        if (o.equals("Saturday")) {
-                                            saturdayBtn.setImageResource(R.drawable.sdayrojo);
-                                        }
-                                        if (o.equals("Sunday")) {
-                                            sundayBtn.setImageResource(R.drawable.sdayrojo);
-                                        }
-                                    });
+                                    for (int i = 0; i < availableDays.getAvailableDays().size(); i++) {
+                                        availableDays.getAvailableDays().get(i).forEach((s, o) -> {
+                                            if (o.equals("Monday")) {
+                                                mondayBtn.setImageResource(R.drawable.mondayrojo);
+                                            }
+                                            if (o.equals("Tuesday")) {
+                                                tuesdayBtn.setImageResource(R.drawable.tdayrojo);
+                                            }
+                                            if (o.equals("Wednesday")) {
+                                                wednesdayBtn.setImageResource(R.drawable.wednesdayrojo);
+                                            }
+                                            if (o.equals("Thursday")) {
+                                                thursdayBtn.setImageResource(R.drawable.tdayrojo);
+                                            }
+                                            if (o.equals("Friday")) {
+                                                fridayBtn.setImageResource(R.drawable.fridayrojo);
+                                            }
+                                            if (o.equals("Saturday")) {
+                                                saturdayBtn.setImageResource(R.drawable.sdayrojo);
+                                            }
+                                            if (o.equals("Sunday")) {
+                                                sundayBtn.setImageResource(R.drawable.sdayrojo);
+                                            }
+                                        });
+                                    }
                                 }
-
+                            } else {
+                                startTime.setVisibility(View.INVISIBLE);
+                                finishTime.setVisibility(View.INVISIBLE);
+                                mondayBtn.setVisibility(View.INVISIBLE);
+                                tuesdayBtn.setVisibility(View.INVISIBLE);
+                                wednesdayBtn.setVisibility(View.INVISIBLE);
+                                thursdayBtn.setVisibility(View.INVISIBLE);
+                                fridayBtn.setVisibility(View.INVISIBLE);
+                                saturdayBtn.setVisibility(View.INVISIBLE);
+                                sundayBtn.setVisibility(View.INVISIBLE);
+                                titleAvailabilityTV.setVisibility(View.INVISIBLE);
                             }
                         }
                     }
@@ -656,12 +920,7 @@ public class GestClassDB {
                                             @Override
                                             public void onSuccess(Void unused) {
                                                 Toast.makeText(c, "You just have to wait", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(c, BeginingActivity.class);
-                                                if (where.equals("request")) {
-                                                    intent.putExtra("user", user);
-                                                } else {
-                                                    intent.putExtra("user", helper);
-                                                }
+                                                Intent intent = new Intent(c, InitialActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                 c.startActivity(intent);
                                             }
@@ -674,8 +933,8 @@ public class GestClassDB {
         });
     }
 
-    public void getPendingAids(User user, ArrayList<Aid> listAids, ListView listAidsLV, Context c) {
-        fsDB.collection("User").document(user.getEmail()).collection("AvailableDay")
+    public void getPendingAids(ArrayList<Aid> listAids, ListView listAidsLV, Context c) {
+        fsDB.collection("User").document(getEmailActualUser(c)).collection("AvailableDay")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -703,10 +962,8 @@ public class GestClassDB {
                                                                                     if (mapDay.get("idAid").toString().equals(objectAid.getId())) {
                                                                                         Aid aid = objectAid.toObject(Aid.class);
                                                                                         aid.setKey(objectAid.getId());
-                                                                                        if (!listAids.contains(aid)) {
-                                                                                            listAids.add(aid);
-                                                                                        }
-                                                                                        ListAdapter listAidsAdapter = new ListAdapter(listAids, c, user, 'p');
+                                                                                        listAids.add(aid);
+                                                                                        ListAdapter listAidsAdapter = new ListAdapter(listAids, c, 'p', null);
                                                                                         listAidsLV.setAdapter(listAidsAdapter);
                                                                                     }
                                                                                 }
@@ -724,6 +981,22 @@ public class GestClassDB {
                         }
                     }
                 });
+    }
+
+    public void textChanges(EditText editText, TextInputLayout textInputLayout, Boolean
+            check, String messageError) {
+        if (!editText.getText().toString().equals("")) {
+            if (!check) {
+                textInputLayout.setErrorEnabled(true);
+                textInputLayout.setError(messageError);
+            } else {
+                textInputLayout.setErrorEnabled(false);
+                textInputLayout.setError("");
+            }
+        } else {
+            textInputLayout.setErrorEnabled(false);
+            textInputLayout.setError("");
+        }
     }
 
     /*

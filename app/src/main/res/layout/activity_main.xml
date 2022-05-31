@@ -5,9 +5,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:id="@+id/logingID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/akaya_telivigala"
+            android:text="Logging in..."
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/linearIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp" />
+    </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,81 +59,98 @@
             android:layout_marginEnd="65dp"
             android:layout_marginBottom="65dp"
             android:fontFamily="@font/akaya_telivigala"
-            android:text="Login"
+            android:text="Welcome"
             android:textAlignment="center"
+            android:textColor="@color/white"
             android:textSize="60sp" />
 
-        <EditText
-            android:id="@+id/emailET"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_below="@+id/loginTV"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="20dp"
-            android:ems="10"
-            android:fontFamily="@font/akaya_telivigala"
-            android:hint="Email"
-            android:inputType="textPersonName"
-            android:textSize="34sp"
-            tools:ignore="TouchTargetSizeCheck,DuplicateClickableBoundsCheck" />
 
-        <EditText
-            android:id="@+id/passwordET"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailTIL"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_below="@+id/emailET"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="25dp"
-            android:ems="10"
-            android:fontFamily="@font/akaya_telivigala"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/loginTV"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            android:textColorHint="@color/white"
+            android:hint="Email"
+            android:textSize="30sp"
+            app:startIconDrawable="@drawable/email" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/akaya_telivigala"
+                android:inputType="textEmailAddress"
+                android:textSize="30sp"
+                android:textColor="@color/white"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordTIL"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/emailTIL"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            android:textColorHint="@color/white"
             android:hint="Password"
-            android:inputType="textPassword"
-            android:textSize="34sp"
-            tools:ignore="TouchTargetSizeCheck,DuplicateClickableBoundsCheck" />
+            android:textSize="30sp"
+            app:endIconMode="password_toggle"
+            app:startIconDrawable="@drawable/lock" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/akaya_telivigala"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <LinearLayout
             android:id="@+id/btnsLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/passwordET"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="41dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="41dp"
-            android:orientation="horizontal">
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical" >
 
             <Button
-                android:id="@+id/loginBtn"
-                android:layout_width="160dp"
-                android:layout_height="60dp"
-                android:layout_marginRight="4dp"
+                android:id="@+id/okBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FF0000"
                 android:fontFamily="@font/akaya_telivigala"
                 android:onClick="loginBtn"
-                android:text="Login"
+                android:text="Log in"
                 android:textSize="26sp"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:cornerRadius="20dp" />
 
             <Button
                 android:id="@+id/registerBtn"
-                android:layout_width="160dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparentUltra"
                 android:fontFamily="@font/akaya_telivigala"
                 android:onClick="registerBtn"
-                android:text="Register"
-                android:textSize="26sp"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:text="Sign in"
+                android:textSize="26sp" />
 
         </LinearLayout>
+
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

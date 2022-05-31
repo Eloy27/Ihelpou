@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Ihelpou</string>
-    <string name="title_activity_begining">BeginingActivity</string>
     <string name="tab_text_1">Request</string>
     <string name="tab_text_2">Offer</string>
     <string name="tab_text_3">Pending</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_request">Request</string>
+    <string name="title_offer">Offer</string>
+    <string name="title_pending">Me</string>
 </resources>

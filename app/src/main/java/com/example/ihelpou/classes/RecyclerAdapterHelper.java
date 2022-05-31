@@ -23,12 +23,10 @@ public class RecyclerAdapterHelper extends RecyclerView.Adapter<RecyclerAdapterH
 
     private ArrayList<User> listHelpers;
     private Context c;
-    private User user;
     private Aid aid;
 
-    public RecyclerAdapterHelper(ArrayList<User> listHelpers, Context c, User user, Aid aid){
+    public RecyclerAdapterHelper(ArrayList<User> listHelpers, Context c, Aid aid){
         this.listHelpers = listHelpers;
-        this.user = user;
         this.c = c;
         this.aid = aid;
     }
@@ -50,7 +48,6 @@ public class RecyclerAdapterHelper extends RecyclerView.Adapter<RecyclerAdapterH
             public void onClick(View v) {
                 Intent i = new Intent(c, InfoUserActivity.class);
                 i.putExtra("helper", listHelpers.get(position));
-                i.putExtra("user", user);
                 i.putExtra("aid", aid);
                 i.putExtra("where", "request");
                 c.startActivity(i);

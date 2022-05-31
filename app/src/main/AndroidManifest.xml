@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ihelpou">
         <activity
+            android:name=".activities.PendingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.InitialActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.InfoUserActivity"
             android:exported="false" />
         <activity
@@ -25,11 +31,7 @@
             android:name=".activities.GestAidActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.BeginingActivity"
-            android:exported="false"
-            android:label="@string/title_activity_begining" />
-        <activity
-            android:name=".activities.UserRegisterActivity"
+            android:name=".activities.UserGestActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
@@ -37,6 +39,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -53,7 +56,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

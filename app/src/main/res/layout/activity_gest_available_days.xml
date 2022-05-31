@@ -19,16 +19,17 @@
     <TextView
         android:id="@+id/titleAvailabilityTV"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/akaya_telivigala"
         android:text="Add your availability"
         android:textAlignment="center"
-        android:textSize="34sp"
+        android:textColor="@color/black"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="parent"
@@ -37,10 +38,8 @@
 
     <ImageButton
         android:id="@+id/backBtn"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="7dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:backgroundTint="#00FFFFFF"
         android:onClick="comeBack"
         android:scaleType="fitCenter"
@@ -48,55 +47,69 @@
         app:srcCompat="@drawable/volver"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-    <EditText
-        android:id="@+id/startTimeET"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/startTimeTIL"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/titleAvailabilityTV"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:focusable="false"
-        android:fontFamily="@font/akaya_telivigala"
         android:hint="Start Time"
-        android:inputType="time"
-        android:onClick="popTimePicker"
         android:textSize="30sp"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        app:startIconDrawable="@drawable/reloj" >
+      <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/startTimeET"
+          android:fontFamily="@font/akaya_telivigala"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="30sp"
+          android:inputType="time"
+          android:onClick="popTimePicker"
+          android:focusable="false" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/finishTimeET"
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/finishTimeTIL"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_below="@+id/startTimeET"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startTimeTIL"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:focusable="false"
-        android:fontFamily="@font/akaya_telivigala"
         android:hint="Finish Time"
-        android:inputType="time"
-        android:onClick="popTimePicker"
         android:textSize="30sp"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        app:startIconDrawable="@drawable/reloj" >
+      <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/finishTimeET"
+          android:fontFamily="@font/akaya_telivigala"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="30sp"
+          android:inputType="time"
+          android:onClick="popTimePicker"
+          android:focusable="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <TextView
         android:id="@+id/daysTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/finishTimeET"
+        android:layout_below="@+id/finishTimeTIL"
         android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
         android:fontFamily="@font/akaya_telivigala"
         android:text="Availability"
+        android:textColor="@color/black"
         android:textSize="30sp"
+        android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
@@ -193,6 +206,7 @@
         android:layout_toStartOf="@+id/okBtn"
         android:background="#00FFFFFF"
         android:scaleType="centerInside"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/delete"

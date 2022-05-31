@@ -4,10 +4,18 @@ import com.example.ihelpou.R;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.models.AvailableDays;
 import com.example.ihelpou.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +25,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -33,6 +42,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
     private User user;
     private String openEdit;
     private AvailableDays availableDay;
+    private FirebaseFirestore fsDB = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +63,8 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
         deleteBtn = findViewById(R.id.deleteBtn);
 
         Intent i = getIntent();
-        user = (User) i.getSerializableExtra("user");
         openEdit = i.getStringExtra("openEdit");
+        getUser(gestClassDB.getEmailActualUser(this));
 
         if (openEdit != null) {
             titleAvailabilityTV.setText("Edit your availability");
@@ -90,6 +100,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
                 });
             }
             okBtn.setImageResource(R.drawable.edit);
+            deleteBtn.setVisibility(View.VISIBLE);
         }
 
         mondayBtn.setOnClickListener(new View.OnClickListener() {
@@ -157,24 +168,58 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (openEdit != null) {
-                    gestClassDB.deleteAvailability(user, getApplicationContext(), availableDay.getKey());
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Introduce your availability", Toast.LENGTH_SHORT).show();
-                }
+                messageSure("You are going to delete your availability");
             }
         });
     }
 
+    public void messageSure(String message) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        gestClassDB.deleteAvailability(user, getApplicationContext(), availableDay.getKey());
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertMessage = alert.create();
+        alertMessage.setTitle("Are you sure?");
+        alertMessage.show();
+    }
+
+    public void getUser(String email) {
+        fsDB.collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> query) {
+                        if (query.isSuccessful()) {
+                            for (QueryDocumentSnapshot objectUser : query.getResult()) {
+                                if (objectUser.getId().equals(email)) {
+                                    user = objectUser.toObject(User.class);
+                                    user.setEmail(email);
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
     public void comeBack(View view) {
-        if (openEdit != null) {
-            onBackPressed();
-        } else{
-            Intent intent = new Intent(this, BeginingActivity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
-        }
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, InitialActivity.class);
+        startActivity(intent);
     }
 
     public void onClickBtn(String day, ImageButton button) {
@@ -209,8 +254,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
                         } else if (button.equals(sundayBtn)) {
                             sundayBtn.setImageResource(R.drawable.sday);
                         }
-                    }
-                    else if (s.equals("availability") && o.equals("busy")) {
+                    } else if (s.equals("availability") && o.equals("busy")) {
                         Toast.makeText(this, "This day you are busy", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -273,7 +317,18 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
                         startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
                         break;
                     case R.id.finishTimeET:
-                        finishTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        if (startTimeET.getText().toString().equals("")) {
+                            Toast.makeText(getApplicationContext(), "Introduce a start time first", Toast.LENGTH_SHORT).show();
+                        } else {
+                            LocalTime startTime = LocalTime.parse(startTimeET.getText().toString());
+                            String finishTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+                            LocalTime finishTimeLT = LocalTime.parse(finishTime);
+                            if (startTime.compareTo(finishTimeLT) < 0) {
+                                finishTimeET.setText(finishTime);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Introduce a valid time", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                         break;
                 }
             }

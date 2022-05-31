@@ -17,10 +17,8 @@
 
         <ImageButton
             android:id="@+id/backBtn"
-            android:layout_width="62dp"
-            android:layout_height="49dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:backgroundTint="#00FFFFFF"
             android:onClick="comeBack"
             android:scaleType="fitCenter"
@@ -122,7 +120,7 @@
                     android:layout_marginStart="50dp"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/akaya_telivigala"
-                    android:text="Age:"
+                    android:text="Date of Birth:"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
