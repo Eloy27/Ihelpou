@@ -8,13 +8,18 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.ihelpou.R;
 import com.example.ihelpou.classes.GestClassDB;
+import com.example.ihelpou.models.Aid;
+import com.example.ihelpou.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 
 public class InitialActivity extends AppCompatActivity {
 
-    private NavController navController;
+    public static NavController navController;
     private GestClassDB gestClassDB = new GestClassDB();
 
     @Override
@@ -22,6 +27,7 @@ public class InitialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
 
+        Intent i = getIntent();
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
@@ -30,4 +36,11 @@ public class InitialActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+        System.exit(0);
+    }
+
 }

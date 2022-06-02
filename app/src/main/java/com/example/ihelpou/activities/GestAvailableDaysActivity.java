@@ -13,6 +13,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -155,12 +156,16 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (openEdit != null) {
-                    AvailableDays availableDaysObj = new AvailableDays(availableDays, startTimeET.getText().toString(), finishTimeET.getText().toString());
-                    gestClassDB.editAvailableDay(availableDaysObj, user, getApplicationContext(), availableDay.getKey());
+                if (!startTimeET.getText().toString().equals("") && !finishTimeET.getText().toString().equals("") && availableDays.size() != 0) {
+                    if (openEdit != null) {
+                        AvailableDays availableDaysObj = new AvailableDays(availableDays, startTimeET.getText().toString(), finishTimeET.getText().toString());
+                        gestClassDB.editAvailableDay(availableDaysObj, user, getApplicationContext(), availableDay.getKey());
+                    } else {
+                        AvailableDays availableDaysObj = new AvailableDays(availableDays, startTimeET.getText().toString(), finishTimeET.getText().toString());
+                        gestClassDB.registerAvailableDay(availableDaysObj, user, getApplicationContext());
+                    }
                 } else {
-                    AvailableDays availableDaysObj = new AvailableDays(availableDays, startTimeET.getText().toString(), finishTimeET.getText().toString());
-                    gestClassDB.registerAvailableDay(availableDaysObj, user, getApplicationContext());
+                    Toast.makeText(getApplicationContext(), "Check your data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -214,12 +219,6 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
 
     public void comeBack(View view) {
         onBackPressed();
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, InitialActivity.class);
-        startActivity(intent);
     }
 
     public void onClickBtn(String day, ImageButton button) {
@@ -326,7 +325,7 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
                             if (startTime.compareTo(finishTimeLT) < 0) {
                                 finishTimeET.setText(finishTime);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Introduce a valid time", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Introduce a valid time (greater than start time)", Toast.LENGTH_SHORT).show();
                             }
                         }
                         break;

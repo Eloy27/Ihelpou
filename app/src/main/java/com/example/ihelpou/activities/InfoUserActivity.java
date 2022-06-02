@@ -18,6 +18,7 @@ import com.example.ihelpou.models.Aid;
 import com.example.ihelpou.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,6 +32,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashMap;
 
 public class InfoUserActivity extends AppCompatActivity {
 
@@ -167,7 +170,6 @@ public class InfoUserActivity extends AppCompatActivity {
                     }
                 });
     }
-
     public void messageAfterCall(Context context) {
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
         alert.setMessage("Is help going to be done?")
@@ -181,12 +183,33 @@ public class InfoUserActivity extends AppCompatActivity {
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         dialog.cancel();
+                        messageSure(context);
                     }
                 });
         AlertDialog message = alert.create();
         message.setTitle("The call has ended");
         message.show();
+    }
+
+    public void messageSure(Context c) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(c);
+        alert.setMessage("Sure that the help is not going to be done?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        messageAfterCall(c);
+                    }
+                });
+        AlertDialog alertMessage = alert.create();
+        alertMessage.setTitle("Are you sure?");
+        alertMessage.show();
     }
 }

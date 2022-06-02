@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ihelpou.R;
+import com.example.ihelpou.activities.InitialActivity;
 import com.example.ihelpou.activities.MainActivity;
 import com.example.ihelpou.activities.PendingActivity;
 import com.example.ihelpou.activities.UserGestActivity;

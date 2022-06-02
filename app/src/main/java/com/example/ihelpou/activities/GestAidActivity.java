@@ -3,6 +3,7 @@ package com.example.ihelpou.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -34,13 +35,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class GestAidActivity extends AppCompatActivity {
 
     private EditText descriptionET;
     private EditText startTimeET, finishTimeET, firstDateET;
-    private int day = 01, month = 01, year = 2022;
+    private int day = 01, month = 01, year = 2022, position;
     private GestClassDB gestClassDB = new GestClassDB();
     private User user;
     private int hour, minute;
@@ -76,6 +78,7 @@ public class GestAidActivity extends AppCompatActivity {
         if (openEdit != null) {
             titleAid.setText("Edit your aid");
             aid = (Aid) i.getSerializableExtra("aid");
+            position = i.getIntExtra("position", position);
             descriptionET.setText(aid.getDescription());
             startTimeET.setText(aid.getStartTime());
             finishTimeET.setText(aid.getFinishTime());
@@ -87,12 +90,16 @@ public class GestAidActivity extends AppCompatActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (openEdit != null) {
-                    Aid aidObject = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString());
-                    gestClassDB.editAid(aidObject, user, getApplicationContext(), aid.getKey());
+                if (checkDescription() && !startTimeET.getText().toString().equals("") && !finishTimeET.getText().toString().equals("") && !firstDateET.getText().toString().equals("")) {
+                    if (openEdit != null) {
+                        Aid aidObject = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString());
+                        gestClassDB.editAid(aidObject, user, getApplicationContext(), aid.getKey());
+                    } else {
+                        Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString(), "no", "");
+                        gestClassDB.registerAid(aid, user, getApplicationContext());
+                    }
                 } else {
-                    Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString(), "no", "");
-                    gestClassDB.registerAid(aid, user, getApplicationContext());
+                    Toast.makeText(getApplicationContext(), "Check your data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -120,6 +127,10 @@ public class GestAidActivity extends AppCompatActivity {
         });
     }
 
+    public boolean checkDescription() {
+        return descriptionET.getText().toString().matches("[0-9A-zÀ-ÿ ]{5,40}");
+    }
+
     public void messageSure(String message) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage(message)
@@ -127,7 +138,9 @@ public class GestAidActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        gestClassDB.deleteAid(user, getApplicationContext(), aid.getKey());
+                        HashMap<Integer, String> hashMapItems = new HashMap<>();
+                        hashMapItems.put(position, "yes");
+                        gestClassDB.deleteAid(user, getApplicationContext(), hashMapItems);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -195,8 +208,8 @@ public class GestAidActivity extends AppCompatActivity {
                             LocalTime finishTimeLT = LocalTime.parse(finishTime);
                             if (startTime.compareTo(finishTimeLT) < 0) {
                                 finishTimeET.setText(finishTime);
-                            } else{
-                                Toast.makeText(getApplicationContext(), "Introduce a valid time", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Introduce a valid time (greater than start time)", Toast.LENGTH_SHORT).show();
                             }
                         }
                         break;

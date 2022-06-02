@@ -10,23 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="-6dp"
+            android:backgroundTint="#00FFFFFF"
+            android:onClick="comeBack"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/volver"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:id="@+id/searchTIL"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search your pending help"
+            android:layout_marginTop="2dp"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            app:boxCornerRadiusTopStart="40dp"
+            android:layout_toEndOf="@+id/backBtn"
+            android:hint="Search your pending help"
             app:boxCornerRadiusBottomEnd="40dp"
             app:boxCornerRadiusBottomStart="40dp"
             app:boxCornerRadiusTopEnd="40dp"
-            app:startIconDrawable="@drawable/lupa"
-            app:endIconMode="clear_text"
+            app:boxCornerRadiusTopStart="40dp"
 
-            app:endIconDrawable="@drawable/quitar">
+            app:endIconDrawable="@drawable/quitar"
+            app:endIconMode="clear_text"
+            app:startIconDrawable="@drawable/lupa">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/searchET"
@@ -35,11 +47,11 @@
                 android:fontFamily="@font/akaya_telivigala"
                 android:inputType="textFilter"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:textSize="24sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ListView
-            android:id="@+id/listAidsLV"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listAidsRV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/searchTIL"
@@ -47,6 +59,6 @@
             android:layout_marginTop="10dp"
             android:divider="@null">
 
-        </ListView>
+        </androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,6 @@ package com.example.ihelpou.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.example.ihelpou.R;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.models.User;
@@ -27,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,12 +36,13 @@ public class MainActivity extends AppCompatActivity {
     private LinearProgressIndicator lpi;
     private LinearLayout logingID;
     private RelativeLayout relativeLayout;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
-        loadPreferences(getApplicationContext());
+        checkConnection();
         emailET = findViewById(R.id.emailET);
         passwordET = findViewById(R.id.passwordET);
         lpi = findViewById(R.id.linearIndicator);
@@ -51,22 +51,61 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void checkConnection(){
+        try {
+            if (isConnected()) {
+                loadPreferences(getApplicationContext());
+            } else{
+                setMainLogin();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setMainLogin(){
+        setTheme(R.style.BackGround);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setContentView(R.layout.activity_main);
+    }
+
+    public boolean isConnected() throws InterruptedException, IOException {
+        String command = "ping -c 1 google.com";
+        return Runtime.getRuntime().exec(command).waitFor() == 0;
+    }
+
 
     public void registerBtn(View view) {
         Intent intent = new Intent(getApplicationContext(), UserGestActivity.class);
         startActivity(intent);
     }
 
-    public void loginBtn(View view) {
+    public void loginBtn(View view) throws IOException, InterruptedException {
         if (!emailET.getText().toString().equals("") && !passwordET.getText().toString().equals("")) {
             User user = new User(emailET.getText().toString());
             relativeLayout.setVisibility(View.INVISIBLE);
             logingID.setVisibility(View.VISIBLE);
             login(user, passwordET.getText().toString(), getApplicationContext(), false);
         }
+        else{
+            showToast();
+        }
     }
 
-    public void loadPreferences(Context c) {
+    void showToast() {
+        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
+            toast = Toast.makeText(this, "Introduce your data", Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
+    public void loadPreferences(Context c) throws IOException, InterruptedException {
         SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(c);
         String email = pm.getString("email", "");
         String pass = pm.getString("pass", "");
@@ -74,62 +113,62 @@ public class MainActivity extends AppCompatActivity {
         login(user, pass, c, true);
     }
 
-    public void login(User userLogin, String password, Context c, Boolean control) {
-        if (!userLogin.getEmail().equals("") && !password.equals("")) {
-            fsAuth.signInWithEmailAndPassword(userLogin.getEmail(), password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    if (!control)
-                        lpi.setProgressCompat(20, true);
-                    fsDB.collection("User")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> query) {
-                                    if (!control)
-                                        lpi.setProgressCompat(40, true);
-                                    if (query.isSuccessful()) {
-                                        for (QueryDocumentSnapshot objectUser : query.getResult()) {
-                                            if (!control)
-                                                lpi.setProgressCompat(60, true);
-                                            if (objectUser.getId().equals(userLogin.getEmail())) {
+    public void login(User userLogin, String password, Context c, Boolean control) throws IOException, InterruptedException {
+        if (isConnected()) {
+            if (!userLogin.getEmail().equals("") && !password.equals("")) {
+                fsAuth.signInWithEmailAndPassword(userLogin.getEmail(), password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        if (!control)
+                            lpi.setProgressCompat(20, true);
+                        fsDB.collection("User")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> query) {
+                                        if (!control)
+                                            lpi.setProgressCompat(40, true);
+                                        if (query.isSuccessful()) {
+                                            for (QueryDocumentSnapshot objectUser : query.getResult()) {
                                                 if (!control)
-                                                    lpi.setProgressCompat(80, true);
-                                                gestClassDB.savePreferences(objectUser.getId(), password, c);
-                                                User user = objectUser.toObject(User.class);
-                                                user.setEmail(objectUser.getId());
-                                                if (!control)
-                                                    lpi.setProgressCompat(100, true);
-                                                Intent intent = new Intent(c, InitialActivity.class);
-                                                intent.putExtra("user", user);
-                                                Toast.makeText(c, "Welcome " + user.getName(), Toast.LENGTH_SHORT).show();
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                c.startActivity(intent);
+                                                    lpi.setProgressCompat(60, true);
+                                                if (objectUser.getId().equals(userLogin.getEmail())) {
+                                                    if (!control)
+                                                        lpi.setProgressCompat(80, true);
+                                                    gestClassDB.savePreferences(objectUser.getId(), password, c);
+                                                    User user = objectUser.toObject(User.class);
+                                                    user.setEmail(objectUser.getId());
+                                                    if (!control)
+                                                        lpi.setProgressCompat(100, true);
+                                                    Intent intent = new Intent(c, InitialActivity.class);
+                                                    intent.putExtra("user", user);
+                                                    Toast.makeText(c, "Welcome " + user.getName(), Toast.LENGTH_SHORT).show();
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    c.startActivity(intent);
+                                                }
                                             }
+                                        } else {
+                                            Toast.makeText(c, "Unexpected Error", Toast.LENGTH_SHORT).show();
                                         }
-                                    } else {
-                                        Toast.makeText(c, "Unexpected Error", Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                            });
+                                });
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    relativeLayout.setVisibility(View.VISIBLE);
-                    logingID.setVisibility(View.INVISIBLE);
-                    Toast.makeText(c, "Check your email and password", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            setTheme(R.style.BackGround);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        relativeLayout.setVisibility(View.VISIBLE);
+                        logingID.setVisibility(View.INVISIBLE);
+                        Toast.makeText(c, "Check your email and password", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                setMainLogin();
             }
-            setContentView(R.layout.activity_main);
+        } else {
+            relativeLayout.setVisibility(View.VISIBLE);
+            logingID.setVisibility(View.INVISIBLE);
+            Toast.makeText(c, "There isn't internet connection", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -11,17 +11,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/listAidsLV"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchTIL"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:hint="Search your help"
+            app:boxCornerRadiusBottomEnd="40dp"
+            app:boxCornerRadiusBottomStart="40dp"
+            app:boxCornerRadiusTopEnd="40dp"
+            app:boxCornerRadiusTopStart="40dp"
+            app:endIconDrawable="@drawable/quitar"
+            app:endIconMode="clear_text"
+
+            app:startIconDrawable="@drawable/lupa">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/akaya_telivigala"
+                android:inputType="textFilter"
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listAidsRV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/searchTIL"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="10dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
 
         <ImageButton
             android:id="@+id/availabilityBtn"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_alignEnd="@+id/listAidsLV"
+            android:layout_alignEnd="@+id/listAidsRV"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="18dp"
             android:layout_marginBottom="18dp"

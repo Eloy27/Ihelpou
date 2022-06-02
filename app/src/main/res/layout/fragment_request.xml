@@ -39,22 +39,29 @@
                 android:textSize="24sp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ListView
-            android:id="@+id/listAidsLV"
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/searchTIL"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="10dp"
-            android:divider="@null">
+            android:layout_marginTop="10dp">
 
-        </ListView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listAidsRV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <ImageButton
             android:id="@+id/addAidBtn"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_alignEnd="@+id/listAidsLV"
+            android:layout_alignEnd="@+id/swipeRefreshLayout"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="18dp"
             android:layout_marginBottom="18dp"

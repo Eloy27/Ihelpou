@@ -5,14 +5,24 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import com.example.ihelpou.activities.GestAvailableDaysActivity;
+import com.example.ihelpou.activities.InitialActivity;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.R;
+import com.example.ihelpou.classes.RecyclerAdapterAids;
 import com.example.ihelpou.models.Aid;
 import com.example.ihelpou.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,9 +37,11 @@ public class OfferFragment extends Fragment {
     private ImageButton availabilityBtn;
     private GestClassDB gestClassDB = new GestClassDB();
     private ArrayList<Aid> listAidsAvailables = new ArrayList<>();
-    private ListView listAidsAvailablesLV;
+    private RecyclerView listAidsAvailablesRV;
     private User user;
     private FirebaseFirestore fsDB = FirebaseFirestore.getInstance();
+    private EditText searchET;
+    private ArrayList<Aid> listAidsAux = new ArrayList<>();
 
     public OfferFragment() {
     }
@@ -43,10 +55,14 @@ public class OfferFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_offer, container, false);
-        listAidsAvailablesLV = view.findViewById(R.id.listAidsLV);
+        listAidsAvailablesRV = view.findViewById(R.id.listAidsRV);
         availabilityBtn = view.findViewById(R.id.availabilityBtn);
+        searchET = view.findViewById(R.id.searchET);
+
         getUser(gestClassDB.getEmailActualUser(getContext()));
-        gestClassDB.getAidsAccordingAvailability(listAidsAvailables, listAidsAvailablesLV, getContext());
+        listAidsAvailablesRV.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        gestClassDB.getAidsAccordingAvailability(listAidsAvailables, listAidsAvailablesRV, getContext(), availabilityBtn);
         gestClassDB.checkAvailability(availabilityBtn, getContext());
 
         availabilityBtn.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +78,33 @@ public class OfferFragment extends Fragment {
                 }
             }
         });
+
+        searchET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                listAidsAux.clear();
+                if (searchET.getText().toString().length() == 0) {
+                    gestClassDB.getAidsAccordingAvailability(listAidsAvailables, listAidsAvailablesRV, getContext(), availabilityBtn);
+                } else {
+                    for (Aid aid : listAidsAvailables) {
+                        if (aid.getDescription().toLowerCase().contains(searchET.getText().toString().toLowerCase())) {
+                            listAidsAux.add(aid);
+                        }
+                    }
+                    RecyclerAdapterAids listAidsAdapter = new RecyclerAdapterAids(listAidsAux, getContext(), 'o', availabilityBtn);
+                    listAidsAvailablesRV.setAdapter(listAidsAdapter);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         return view;
     }
 
@@ -82,4 +125,5 @@ public class OfferFragment extends Fragment {
                     }
                 });
     }
+
 }

@@ -7,6 +7,7 @@ import android.media.Image;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ihelpou.R;
 import com.example.ihelpou.activities.GestAvailableDaysActivity;
@@ -63,6 +65,8 @@ public class GestClassDB {
 
     private FirebaseAuth fsAuth;
     private FirebaseFirestore fsDB;
+    public RecyclerAdapterAids adapter;
+
 
     public GestClassDB() {
 
@@ -375,7 +379,7 @@ public class GestClassDB {
         return PreferenceManager.getDefaultSharedPreferences(c).getString("email", "");
     }
 
-    public void getAids(ArrayList<Aid> listAids, ListView listAidsLV, Context c, ImageButton deleteAidBtn) {
+    public void getAids(ArrayList<Aid> listAids, RecyclerView listAidsRV, Context c, ImageButton deleteAidBtn) {
         fsDB.collection("User").document(getEmailActualUser(c)).collection("Aid")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -387,8 +391,8 @@ public class GestClassDB {
                                 Aid aid = objectAid.toObject(Aid.class);
                                 aid.setKey(objectAid.getId());
                                 listAids.add(aid);
-                                ListAdapter adapter = new ListAdapter(listAids, c, 'r', deleteAidBtn);
-                                listAidsLV.setAdapter(adapter);
+                                adapter = new RecyclerAdapterAids(listAids, c, 'r', deleteAidBtn);
+                                listAidsRV.setAdapter(adapter);
                             }
                         } else {
                             Toast.makeText(c, "Unexpected Error", Toast.LENGTH_SHORT).show();
@@ -407,6 +411,7 @@ public class GestClassDB {
             public void onSuccess(Void unused) {
                 Intent intent = new Intent(c, InitialActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("where", R.id.navigation_offer);
                 c.startActivity(intent);
                 Toast.makeText(c, "Availability added successfully", Toast.LENGTH_SHORT).show();
             }
@@ -428,6 +433,7 @@ public class GestClassDB {
             public void onSuccess(Void unused) {
                 Intent intent = new Intent(c, InitialActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("where", R.id.navigation_offer);
                 c.startActivity(intent);
                 Toast.makeText(c, "Availability edited successfully", Toast.LENGTH_SHORT).show();
             }
@@ -477,25 +483,34 @@ public class GestClassDB {
                 });
     }
 
-    public void deleteAid(User user, Context c, String key) {
+    public void deleteAid(User user, Context c, HashMap<Integer, String> hashMapItems) {
         fsDB.collection("User").document(user.getEmail()).collection("Aid")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> query) {
                         if (query.isSuccessful()) {
-                            Iterator<QueryDocumentSnapshot> iterator = query.getResult().iterator();
                             Boolean haveDeleted = false;
+                            int cont = 0;
                             for (QueryDocumentSnapshot objectAid : query.getResult()) {
-                                if (query.getResult().size() > 1)
-                                    iterator.next().getId();
                                 Aid aid = objectAid.toObject(Aid.class);
                                 aid.setKey(objectAid.getId());
-                                if (key.contains(aid.getKey())) {
-                                    fsDB.collection("User").document(user.getEmail()).collection("Aid").document(aid.getKey()).delete();
-                                    haveDeleted = true;
+
+                                if (hashMapItems.size() > 1) {
+                                    if (hashMapItems.get(cont).equals("yes")) {
+                                        fsDB.collection("User").document(user.getEmail()).collection("Aid").document(aid.getKey()).delete();
+                                        haveDeleted = true;
+                                    }
+                                } else {
+                                    if (cont == hashMapItems.entrySet().iterator().next().getKey()) {
+                                        if (hashMapItems.get(cont).equals("yes")) {
+                                            fsDB.collection("User").document(user.getEmail()).collection("Aid").document(aid.getKey()).delete();
+                                            haveDeleted = true;
+                                        }
+                                    }
                                 }
-                                if (!iterator.hasNext() && haveDeleted) {
+                                cont++;
+                                if (cont == query.getResult().size() && haveDeleted) {
                                     Toast.makeText(c, "Your aid/s has been deleted successfully", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(c, InitialActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -519,7 +534,7 @@ public class GestClassDB {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 c.startActivity(intent);
                             }
-                            if (query.getResult().size() != 0) {
+                            else {
                                 button.setImageResource(R.drawable.edit);
                             }
                         }
@@ -585,8 +600,8 @@ public class GestClassDB {
     }
 
 
-    public void getAidsAccordingAvailability(ArrayList<Aid> listAidsAvailables, ListView
-            listAidsAvailablesLV, Context c) {
+    public void getAidsAccordingAvailability(ArrayList<Aid> listAidsAvailables, RecyclerView
+            listAidsAvailablesRV, Context c, ImageButton availabilityBtn) {
         fsDB.collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -637,16 +652,21 @@ public class GestClassDB {
                                                                                                 insert = true;
                                                                                             } else if (dayAndAvailability.toString().equals(aidDayOfWeek) && insert == true) {
                                                                                                 if (!getEmailActualUser(c).equals(objectUser.getId()) && aid.getDone().equals("no")) {
-                                                                                                    if (!listAidsAvailables.contains(aid)) {
+                                                                                                    Boolean check = false;
+                                                                                                    for (int i = 0; i < listAidsAvailables.size(); i++) {
+                                                                                                        if (listAidsAvailables.get(i).getKey().equals(aid.getKey())) {
+                                                                                                            check = true;
+                                                                                                        }
+                                                                                                    }
+                                                                                                    if (!check) {
                                                                                                         listAidsAvailables.add(aid);
                                                                                                     }
                                                                                                 }
                                                                                             }
                                                                                         }
                                                                                     }
-
-                                                                                    ListAdapter adapter = new ListAdapter(listAidsAvailables, c, 'o', null);
-                                                                                    listAidsAvailablesLV.setAdapter(adapter);
+                                                                                    RecyclerAdapterAids adapter = new RecyclerAdapterAids(listAidsAvailables, c, 'o', availabilityBtn);
+                                                                                    listAidsAvailablesRV.setAdapter(adapter);
                                                                                 }
                                                                             }
                                                                         } else {
@@ -830,7 +850,6 @@ public class GestClassDB {
                                 for (QueryDocumentSnapshot objectAvailableDay : query.getResult()) {
                                     ObjectMapper mapper = new ObjectMapper();
                                     AvailableDays availableDays = new AvailableDays(objectAvailableDay.getId(), mapper.convertValue(objectAvailableDay.get("day"), ArrayList.class), String.valueOf(objectAvailableDay.get("startTime")), String.valueOf(objectAvailableDay.get("finishTime")));
-                                    Log.e("hola", availableDays.getStartTime() + "");
                                     startTime.setText(startTime.getText() + " " + availableDays.getStartTime());
                                     finishTime.setText(finishTime.getText() + " " + availableDays.getFinishTime());
 
@@ -933,7 +952,7 @@ public class GestClassDB {
         });
     }
 
-    public void getPendingAids(ArrayList<Aid> listAids, ListView listAidsLV, Context c) {
+    public void getPendingAids(ArrayList<Aid> listAids, RecyclerView listAidsRV, Context c) {
         fsDB.collection("User").document(getEmailActualUser(c)).collection("AvailableDay")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -963,8 +982,8 @@ public class GestClassDB {
                                                                                         Aid aid = objectAid.toObject(Aid.class);
                                                                                         aid.setKey(objectAid.getId());
                                                                                         listAids.add(aid);
-                                                                                        ListAdapter listAidsAdapter = new ListAdapter(listAids, c, 'p', null);
-                                                                                        listAidsLV.setAdapter(listAidsAdapter);
+                                                                                        RecyclerAdapterAids listAidsAdapter = new RecyclerAdapterAids(listAids, c, 'p', null);
+                                                                                        listAidsRV.setAdapter(listAidsAdapter);
                                                                                     }
                                                                                 }
                                                                             }
