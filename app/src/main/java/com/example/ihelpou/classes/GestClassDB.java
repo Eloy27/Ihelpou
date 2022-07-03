@@ -3,16 +3,21 @@ package com.example.ihelpou.classes;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +54,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -66,7 +79,8 @@ public class GestClassDB {
     private FirebaseAuth fsAuth;
     private FirebaseFirestore fsDB;
     public RecyclerAdapterAids adapter;
-
+    private int cont = 0;
+    private boolean control = false;
 
     public GestClassDB() {
 
@@ -74,11 +88,10 @@ public class GestClassDB {
         fsAuth = FirebaseAuth.getInstance();
     }
 
-    public void registerUser(User user, String password, LinearProgressIndicator lpi, Context c) {
+    public void registerUser(User user, String password, LinearProgressIndicator lpi, Context c, Uri selectedImage) {
         lpi.setProgressCompat(20, true);
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("name", user.getName());
-        userMap.put("username", user.getUsername());
         userMap.put("surname", user.getSurname());
         userMap.put("phone", user.getPhone());
         userMap.put("address", user.getAddress());
@@ -94,6 +107,7 @@ public class GestClassDB {
                     public void onSuccess(Void unused) {
                         lpi.setProgressCompat(80, true);
                         savePreferences(user.getEmail(), password, c);
+                        uploadImage(selectedImage, user.getEmail());
                         lpi.setProgressCompat(100, true);
                         Intent intent = new Intent(c, InitialActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -134,7 +148,7 @@ public class GestClassDB {
         });
     }
 
-    public void editUser(User user, String oldPassword, String newPassword, String oldEmail, LinearProgressIndicator lpi, Context c) {
+    public void editUser(User user, String oldPassword, String newPassword, String oldEmail, LinearProgressIndicator lpi, Context c, Uri selectedImage) {
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
         AuthCredential credential = EmailAuthProvider
                 .getCredential(oldEmail, oldPassword);
@@ -167,7 +181,6 @@ public class GestClassDB {
                                                                         Log.e("TAG", "Password updated");
                                                                         Map<String, Object> userMap = new HashMap<>();
                                                                         userMap.put("name", user.getName());
-                                                                        userMap.put("username", user.getUsername());
                                                                         userMap.put("surname", user.getSurname());
                                                                         userMap.put("phone", user.getPhone());
                                                                         userMap.put("address", user.getAddress());
@@ -184,6 +197,7 @@ public class GestClassDB {
                                                                                 editor.clear();
                                                                                 editor.apply();
                                                                                 savePreferences(user.getEmail(), newPassword, c);
+                                                                                uploadImage(selectedImage, user.getEmail());
                                                                                 Intent i = new Intent(c, MainActivity.class);
                                                                                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                                 c.startActivity(i);
@@ -270,6 +284,8 @@ public class GestClassDB {
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         lpi.setProgressCompat(100, true);
                                                         if (task.isSuccessful()) {
+                                                            FirebaseAuth.getInstance().getCurrentUser().delete();
+                                                            deleteImage(Uri.parse(user.getEmail()));
                                                             SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(c);
                                                             SharedPreferences.Editor editor = pm.edit();
                                                             editor.clear();
@@ -291,6 +307,8 @@ public class GestClassDB {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             lpi.setProgressCompat(40, true);
                                             if (task.isSuccessful()) {
+                                                FirebaseAuth.getInstance().getCurrentUser().delete();
+                                                deleteImage(Uri.parse(user.getEmail()));
                                                 lpi.setProgressCompat(100, true);
                                                 SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(c);
                                                 SharedPreferences.Editor editor = pm.edit();
@@ -337,20 +355,47 @@ public class GestClassDB {
         aidMap.put("day", aid.getDay());
         aidMap.put("done", aid.getDone());
         aidMap.put("idHelper", aid.getIdHelper());
-        fsDB.collection("User").document(user.getEmail()).collection("Aid").document().set(aidMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Intent intent = new Intent(c, InitialActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                c.startActivity(intent);
-                Toast.makeText(c, "Aid added successfully", Toast.LENGTH_SHORT).show();
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+        if (currentDate.equals(aid.getDay())) {
+            Calendar calendar = Calendar.getInstance();
+            DateFormat sdf = new SimpleDateFormat("HH:mm");
+            String strDate = sdf.format(calendar.getTime());
+            LocalTime startTime = LocalTime.parse(aid.getStartTime());
+            LocalTime currentTime = LocalTime.parse(strDate);
+            if (startTime.compareTo(currentTime) >= 0) {
+                fsDB.collection("User").document(user.getEmail()).collection("Aid").document().set(aidMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Intent intent = new Intent(c, InitialActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        c.startActivity(intent);
+                        Toast.makeText(c, "Aid added successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(c, "Error registering aid", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(c, "This hour is not possible", Toast.LENGTH_SHORT).show();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(c, "Error registering aid", Toast.LENGTH_SHORT).show();
-            }
-        });
+        } else {
+            fsDB.collection("User").document(user.getEmail()).collection("Aid").document().set(aidMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Intent intent = new Intent(c, InitialActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    c.startActivity(intent);
+                    Toast.makeText(c, "Aid added successfully", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(c, "Error registering aid", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     public void editAid(Aid aid, User user, Context c, String key) {
@@ -359,27 +404,55 @@ public class GestClassDB {
         aidMap.put("startTime", aid.getStartTime());
         aidMap.put("finishTime", aid.getFinishTime());
         aidMap.put("day", aid.getDay());
-        fsDB.collection("User").document(user.getEmail()).collection("Aid").document(key).update(aidMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Intent intent = new Intent(c, InitialActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                c.startActivity(intent);
-                Toast.makeText(c, "Aid edited successfully", Toast.LENGTH_SHORT).show();
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+        if (currentDate.equals(aid.getDay())) {
+            Calendar calendar = Calendar.getInstance();
+            DateFormat sdf = new SimpleDateFormat("HH:mm");
+            String strDate = sdf.format(calendar.getTime());
+            LocalTime startTime = LocalTime.parse(aid.getStartTime());
+            LocalTime currentTime = LocalTime.parse(strDate);
+            if (startTime.compareTo(currentTime) >= 0) {
+                fsDB.collection("User").document(user.getEmail()).collection("Aid").document(key).update(aidMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Intent intent = new Intent(c, InitialActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        c.startActivity(intent);
+                        Toast.makeText(c, "Aid edited successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(c, "Error editing aid", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(c, "This hour is not possible", Toast.LENGTH_SHORT).show();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(c, "Unexpected Error", Toast.LENGTH_SHORT).show();
-            }
-        });
+        } else {
+            fsDB.collection("User").document(user.getEmail()).collection("Aid").document(key).update(aidMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Intent intent = new Intent(c, InitialActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    c.startActivity(intent);
+                    Toast.makeText(c, "Aid edited successfully", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(c, "Unexpected Error", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     public String getEmailActualUser(Context c) {
         return PreferenceManager.getDefaultSharedPreferences(c).getString("email", "");
     }
 
-    public void getAids(ArrayList<Aid> listAids, RecyclerView listAidsRV, Context c, ImageButton deleteAidBtn) {
+    public void getAids(ArrayList<Aid> listAids, RecyclerView listAidsRV, Context c, ImageButton deleteAidBtn, LinearLayout messageID) {
+        messageID.setVisibility(View.VISIBLE);
         fsDB.collection("User").document(getEmailActualUser(c)).collection("Aid")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -388,14 +461,86 @@ public class GestClassDB {
                         if (query.isSuccessful()) {
                             listAids.clear();
                             for (QueryDocumentSnapshot objectAid : query.getResult()) {
+                                deleteDoneAids(c);
                                 Aid aid = objectAid.toObject(Aid.class);
                                 aid.setKey(objectAid.getId());
                                 listAids.add(aid);
                                 adapter = new RecyclerAdapterAids(listAids, c, 'r', deleteAidBtn);
                                 listAidsRV.setAdapter(adapter);
+                                messageID.setVisibility(View.INVISIBLE);
                             }
                         } else {
                             Toast.makeText(c, "Unexpected Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    public void deleteDoneAids(Context c) {
+        fsDB.collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> queryUsers) {
+                        if (queryUsers.isSuccessful()) {
+                            for (QueryDocumentSnapshot objectUser : queryUsers.getResult()) {
+                                User user = objectUser.toObject(User.class);
+                                user.setEmail(objectUser.getId());
+                                fsDB.collection("User").document(user.getEmail()).collection("Aid")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> query) {
+                                                if (query.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot objectAid : query.getResult()) {
+                                                        Aid aid = objectAid.toObject(Aid.class);
+                                                        aid.setKey(objectAid.getId());
+                                                        String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                                                        if (currentDate.equals(aid.getDay()) && aid.getDone().equals("pending")) {
+                                                            Calendar calendar = Calendar.getInstance();
+                                                            DateFormat sdf = new SimpleDateFormat("HH:mm");
+                                                            String strDate = sdf.format(calendar.getTime());
+                                                            LocalTime finishTime = LocalTime.parse(aid.getFinishTime());
+                                                            LocalTime currentTime = LocalTime.parse(strDate);
+                                                            if (finishTime.compareTo(currentTime) <= 0) {
+                                                                fsDB.collection("User").document(aid.getIdHelper()).collection("AvailableDay")
+                                                                        .get()
+                                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    for (QueryDocumentSnapshot objectAvailableDays : task.getResult()) {
+                                                                                        ObjectMapper mapper = new ObjectMapper();
+                                                                                        AvailableDays availableDays = new AvailableDays(objectAvailableDays.getId(), mapper.convertValue(objectAvailableDays.get("day"), ArrayList.class), String.valueOf(objectAvailableDays.get("startTime")), String.valueOf(objectAvailableDays.get("finishTime")));
+                                                                                        Map<String, Object> availableDayMap = new HashMap<>();
+                                                                                        for (int i = 0; i < availableDays.getAvailableDays().size(); i++) {
+                                                                                            int finalI = i;
+                                                                                            availableDays.getAvailableDays().get(i).forEach((s, o) -> {
+                                                                                                if (o.equals(aid.getKey())) {
+                                                                                                    availableDays.getAvailableDays().get(finalI).put("availability", "available");
+                                                                                                    availableDays.getAvailableDays().get(finalI).put("idAid", "");
+                                                                                                }
+                                                                                            });
+                                                                                            availableDayMap.put("day", availableDays.getAvailableDays());
+                                                                                            availableDayMap.put("startTime", availableDays.getStartTime());
+                                                                                            availableDayMap.put("finishTime", availableDays.getFinishTime());
+                                                                                        }
+                                                                                        fsDB.collection("User").document(aid.getIdHelper()).collection("AvailableDay").document(objectAvailableDays.getId()).delete();
+                                                                                        fsDB.collection("User").document(aid.getIdHelper()).collection("AvailableDay").document(objectAvailableDays.getId()).set(availableDayMap);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                fsDB.collection("User").document(getEmailActualUser(c)).collection("Aid").document(aid.getKey()).delete();
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    Toast.makeText(c, "Unexpected Error", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            }
                         }
                     }
                 });
@@ -533,8 +678,7 @@ public class GestClassDB {
                                 Intent intent = new Intent(c, GestAvailableDaysActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 c.startActivity(intent);
-                            }
-                            else {
+                            } else {
                                 button.setImageResource(R.drawable.edit);
                             }
                         }
@@ -601,7 +745,8 @@ public class GestClassDB {
 
 
     public void getAidsAccordingAvailability(ArrayList<Aid> listAidsAvailables, RecyclerView
-            listAidsAvailablesRV, Context c, ImageButton availabilityBtn) {
+            listAidsAvailablesRV, Context c, ImageButton availabilityBtn, LinearLayout messageID) {
+        messageID.setVisibility(View.VISIBLE);
         fsDB.collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -660,12 +805,13 @@ public class GestClassDB {
                                                                                                     }
                                                                                                     if (!check) {
                                                                                                         listAidsAvailables.add(aid);
+                                                                                                        messageID.setVisibility(View.INVISIBLE);
                                                                                                     }
                                                                                                 }
                                                                                             }
                                                                                         }
                                                                                     }
-                                                                                    RecyclerAdapterAids adapter = new RecyclerAdapterAids(listAidsAvailables, c, 'o', availabilityBtn);
+                                                                                    adapter = new RecyclerAdapterAids(listAidsAvailables, c, 'o', availabilityBtn);
                                                                                     listAidsAvailablesRV.setAdapter(adapter);
                                                                                 }
                                                                             }
@@ -686,6 +832,35 @@ public class GestClassDB {
                 });
     }
 
+    public void checkHourAid(Aid aid, Context c) {
+        fsDB.collection("User").document(getEmailActualUser(c)).collection("Aid").document(aid.getKey())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> queryAid) {
+                        Aid aid = queryAid.getResult().toObject(Aid.class);
+                        aid.setKey(queryAid.getResult().getId());
+                        String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                        if (aid.getDay().compareTo(currentDate) > 0) {
+                            checkHelpersAccordingAid(aid, c);
+                        } else if (aid.getDay().compareTo(currentDate) == 0) {
+                            Calendar calendar = Calendar.getInstance();
+                            DateFormat sdf = new SimpleDateFormat("HH:mm");
+                            String strDate = sdf.format(calendar.getTime());
+                            LocalTime finishTime = LocalTime.parse(aid.getFinishTime());
+                            LocalTime currentTime = LocalTime.parse(strDate);
+                            if (finishTime.compareTo(currentTime) > 0) {
+                                checkHelpersAccordingAid(aid, c);
+                            } else {
+                                Toast.makeText(c, "It is an old aid, delete or edit it", Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (aid.getDay().compareTo(currentDate) < 0) {
+                            Toast.makeText(c, "It is an old aid, delete or edit it", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 
     public void checkHelpersAccordingAid(Aid aid, Context c) {
         fsDB.collection("User")
@@ -694,6 +869,8 @@ public class GestClassDB {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> queryUsers) {
                         if (queryUsers.isSuccessful()) {
+                            final int[] i = {0};
+                            final int[] i2 = {0};
                             for (QueryDocumentSnapshot objectUser : queryUsers.getResult()) {
                                 User user = objectUser.toObject(User.class);
                                 user.setEmail(objectUser.getId());
@@ -739,10 +916,108 @@ public class GestClassDB {
                                                                 }
                                                             }
                                                         }
+                                                        i[0]++;
+                                                        if (i[0] == cont && !control) {
+                                                            Toast.makeText(c, "There isn't any available helper", Toast.LENGTH_SHORT).show();
+                                                        }
                                                     }
                                                 }
                                             }
                                         });
+                                i2[0]++;
+                                if (cont < 2 && !control && i2[0] == cont) {
+                                    Toast.makeText(c, "There isn't any available helper", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    public void getUsersWithAvailability() {
+        fsDB.collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> queryUsers) {
+                        if (queryUsers.isSuccessful()) {
+                            for (QueryDocumentSnapshot objectUser : queryUsers.getResult()) {
+                                fsDB.collection("User").document(objectUser.getId()).collection("AvailableDay")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> query) {
+                                                if (query.isSuccessful()) {
+                                                    if (query.getResult().getDocuments().size() > 0) {
+                                                        cont++;
+                                                    }
+                                                }
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void checkExistHelpersAccordingAid(Aid aid, Context c) {
+        fsDB.collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> queryUsers) {
+                        if (queryUsers.isSuccessful()) {
+                            Iterator<QueryDocumentSnapshot> iterator = queryUsers.getResult().iterator();
+                            for (QueryDocumentSnapshot objectUser : queryUsers.getResult()) {
+                                iterator.next().getId();
+                                User user = objectUser.toObject(User.class);
+                                user.setEmail(objectUser.getId());
+                                fsDB.collection("User").document(user.getEmail()).collection("AvailableDay")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> query) {
+                                                if (query.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot objectAvailableDay : query.getResult()) {
+                                                        ObjectMapper mapper = new ObjectMapper();
+                                                        AvailableDays availableDays = new AvailableDays(objectAvailableDay.getId(), mapper.convertValue(objectAvailableDay.get("day"), ArrayList.class), String.valueOf(objectAvailableDay.get("startTime")), String.valueOf(objectAvailableDay.get("finishTime")));
+                                                        LocalTime availableDaysST = LocalTime.parse(availableDays.getStartTime());
+                                                        LocalTime availableDaysFT = LocalTime.parse(availableDays.getFinishTime());
+                                                        LocalTime aidST = LocalTime.parse(aid.getStartTime());
+                                                        LocalTime aidFT = LocalTime.parse(aid.getFinishTime());
+
+                                                        if (aidST.compareTo(availableDaysST) >= 0 && aidFT.compareTo(availableDaysFT) <= 0) {
+                                                            Calendar calendar = Calendar.getInstance();
+                                                            String aidDayOfWeek = "";
+
+                                                            try {
+                                                                Date aidDay = new SimpleDateFormat("dd/MM/yyyy").parse(aid.getDay());
+                                                                calendar.setTime(aidDay);
+                                                                aidDayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
+                                                            } catch (ParseException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                            for (HashMap mapDay : availableDays.getAvailableDays()) {
+                                                                boolean insert = false;
+                                                                for (Object dayAndAvailability : mapDay.values()) {
+                                                                    if (dayAndAvailability.toString().equals("available")) {
+                                                                        insert = true;
+                                                                    } else if (dayAndAvailability.toString().equals(aidDayOfWeek) && insert) {
+                                                                        if (!getEmailActualUser(c).equals(objectUser.getId())) {
+                                                                            control = true;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                if (!iterator.hasNext()) {
+                                    checkHourAid(aid, c);
+                                }
                             }
                         }
                     }
@@ -952,7 +1227,8 @@ public class GestClassDB {
         });
     }
 
-    public void getPendingAids(ArrayList<Aid> listAids, RecyclerView listAidsRV, Context c) {
+    public void getPendingAids(ArrayList<Aid> listAids, RecyclerView listAidsRV, Context c, LinearLayout messageID) {
+        messageID.setVisibility(View.VISIBLE);
         fsDB.collection("User").document(getEmailActualUser(c)).collection("AvailableDay")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -981,6 +1257,7 @@ public class GestClassDB {
                                                                                     if (mapDay.get("idAid").toString().equals(objectAid.getId())) {
                                                                                         Aid aid = objectAid.toObject(Aid.class);
                                                                                         aid.setKey(objectAid.getId());
+                                                                                        messageID.setVisibility(View.INVISIBLE);
                                                                                         listAids.add(aid);
                                                                                         RecyclerAdapterAids listAidsAdapter = new RecyclerAdapterAids(listAids, c, 'p', null);
                                                                                         listAidsRV.setAdapter(listAidsAdapter);
@@ -1016,6 +1293,34 @@ public class GestClassDB {
             textInputLayout.setErrorEnabled(false);
             textInputLayout.setError("");
         }
+    }
+
+    public void uploadImage(Uri uri, String email) {
+        if (uri != null) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference("Avatars")
+                    .child(email);
+            storageReference.putFile(uri);
+        }
+    }
+
+    public void getImage(Uri nameFile, ImageView avatarIV) throws IOException {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("Avatars/" + nameFile);
+        File localFile = File.createTempFile("tempFile", "");
+        storageReference.getFile(localFile).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                Bitmap bm = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                avatarIV.setImageBitmap(bm);
+                if (bm == null) {
+                    avatarIV.setImageResource(R.drawable.avatar);
+                }
+            }
+        });
+    }
+
+    public void deleteImage(Uri nameFile) {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("Avatars/" + nameFile);
+        storageReference.delete();
     }
 
     /*

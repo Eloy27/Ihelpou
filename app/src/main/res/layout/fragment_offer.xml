@@ -7,65 +7,111 @@
     android:background="#FFD9E6"
     tools:context=".fragments.OfferFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/searchTIL"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
+            android:id="@+id/messageID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:hint="Search your help"
-            app:boxCornerRadiusBottomEnd="40dp"
-            app:boxCornerRadiusBottomStart="40dp"
-            app:boxCornerRadiusTopEnd="40dp"
-            app:boxCornerRadiusTopStart="40dp"
-            app:endIconDrawable="@drawable/quitar"
-            app:endIconMode="clear_text"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            app:startIconDrawable="@drawable/lupa">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/searchET"
+            <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/akaya_telivigala"
-                android:inputType="textFilter"
+                android:text="Aids according your availability will appear here"
+                android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:textSize="28sp" />
 
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/akaya_telivigala"
+                android:text="Maybe you have to change your availability"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="22sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/listAidsRV"
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchTIL"
+                style="@style/SearchInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:hint="Search your help"
+                app:boxCornerRadiusBottomEnd="40dp"
+                app:boxCornerRadiusBottomStart="40dp"
+                app:boxCornerRadiusTopEnd="40dp"
+                app:boxCornerRadiusTopStart="40dp"
+                app:endIconDrawable="@drawable/quitar"
+                app:endIconMode="clear_text"
+
+                app:startIconDrawable="@drawable/lupa">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:inputType="textFilter"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/searchTIL"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="10dp">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listAidsRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/searchTIL"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dp">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-        <ImageButton
-            android:id="@+id/availabilityBtn"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignEnd="@+id/listAidsRV"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
-            android:backgroundTint="#00FFFFFF"
-            android:scaleType="centerCrop"
-            android:src="@drawable/add"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
+            <ImageButton
+                android:id="@+id/availabilityBtn"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignEnd="@+id/swipeRefreshLayout"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="18dp"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="centerCrop"
+                android:src="@drawable/add"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="SpeakableTextPresentCheck" />
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -3,17 +3,20 @@ package com.example.ihelpou.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +34,11 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.StorageException;
+
+import java.io.IOException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class UserFragment extends Fragment {
@@ -43,6 +51,8 @@ public class UserFragment extends Fragment {
     private LinearProgressIndicator lpi;
     private LinearLayout logingID;
     private RelativeLayout relativeLayout;
+    private CircleImageView avatarIV;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public UserFragment() {
     }
@@ -57,6 +67,8 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        avatarIV = view.findViewById(R.id.avatarIV);
         pendingBtn = view.findViewById(R.id.pendingBtn);
         editProfileBtn = view.findViewById(R.id.editProfileBtn);
         logOutBtn = view.findViewById(R.id.logOutBtn);
@@ -67,8 +79,15 @@ public class UserFragment extends Fragment {
         lpi = view.findViewById(R.id.linearIndicator);
         logingID = view.findViewById(R.id.logingID);
         relativeLayout = view.findViewById(R.id.relativeLayout);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         getUser(gestClassDB.getEmailActualUser(getContext()));
+
+        try {
+            gestClassDB.getImage(Uri.parse(gestClassDB.getEmailActualUser(getContext())), avatarIV);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         pendingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +122,20 @@ public class UserFragment extends Fragment {
                 messageSure(message, false);
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getUser(gestClassDB.getEmailActualUser(getContext()));
+                try {
+                    gestClassDB.getImage(Uri.parse(gestClassDB.getEmailActualUser(getContext())), avatarIV);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
 
         return view;
     }

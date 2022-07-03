@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -25,14 +26,18 @@ public class PendingActivity extends AppCompatActivity {
     private ArrayList<Aid> listAids = new ArrayList<>();
     private ArrayList<Aid> listAidsAux = new ArrayList<>();
     private EditText searchET;
+    private LinearLayout messageID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending);
         listAidsRV = findViewById(R.id.listAidsRV);
-        gestClassDB.getPendingAids(listAids, listAidsRV, this);
         searchET = findViewById(R.id.searchET);
+        messageID = findViewById(R.id.messageID);
+
+        gestClassDB.getPendingAids(listAids, listAidsRV, this, messageID);
+
         listAidsRV.setLayoutManager(new LinearLayoutManager(this));
         searchET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -43,7 +48,7 @@ public class PendingActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 listAidsAux.clear();
                 if (searchET.getText().toString().length() == 0) {
-                    gestClassDB.getPendingAids(listAids, listAidsRV, getApplicationContext());
+                    gestClassDB.getPendingAids(listAids, listAidsRV, getApplicationContext(), messageID);
                 } else {
                     for (Aid aid : listAids) {
                         if (aid.getDescription().toLowerCase().contains(searchET.getText().toString().toLowerCase())) {

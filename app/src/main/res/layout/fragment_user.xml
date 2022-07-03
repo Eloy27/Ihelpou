@@ -37,125 +37,133 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp">
 
-            <ImageView
-                android:id="@+id/avatarIV"
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
-                android:src="@drawable/avatar" />
-
-            <TextView
-                android:id="@+id/nameTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="35dp"
-                android:layout_marginEnd="8dp"
-                android:layout_toEndOf="@+id/avatarIV"
-                android:fontFamily="@font/akaya_telivigala"
-                android:text="Name"
-                android:textColor="@color/black"
-                android:textSize="38sp" />
-
-            <TextView
-                android:id="@+id/phoneTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/nameTV"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="-20dp"
-                android:layout_marginEnd="8dp"
-                android:layout_toEndOf="@+id/avatarIV"
-                android:fontFamily="@font/akaya_telivigala"
-                android:text="Phone"
-                android:textColor="@color/black"
-                android:textSize="34sp" />
-
-            <View
-                android:id="@+id/divider"
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/avatarIV"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="26dp"
-                android:layout_marginEnd="-37dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/pendingBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/divider"
-                android:layout_alignParentStart="true"
-                android:backgroundTint="@color/transparent"
-                android:drawableEnd="@drawable/offerpending"
-                android:fontFamily="@font/akaya_telivigala"
-                android:text="Pending"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/avatarIV"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+                    android:src="@drawable/avatar" />
 
-            <Button
-                android:id="@+id/editProfileBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/pendingBtn"
-                android:layout_alignParentStart="true"
-                android:backgroundTint="@color/transparent"
-                android:drawableEnd="@drawable/editprofile"
-                android:fontFamily="@font/akaya_telivigala"
-                android:text="Edit Profile"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+                <TextView
+                    android:id="@+id/nameTV"
+                    style="@style/Theme.Ihelpou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toEndOf="@+id/avatarIV"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:text="Name"
+                    android:textSize="38sp" />
 
-            <Button
-                android:id="@+id/logOutBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editProfileBtn"
-                android:layout_alignParentStart="true"
-                android:backgroundTint="@color/transparent"
-                android:drawableEnd="@drawable/log_out"
-                android:fontFamily="@font/akaya_telivigala"
-                android:text="Log out"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+                <TextView
+                    android:id="@+id/phoneTV"
+                    style="@style/Theme.Ihelpou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nameTV"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="-20dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toEndOf="@+id/avatarIV"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:text="Phone"
+                    android:textSize="34sp" />
 
-            <TextView
-                android:id="@+id/deleteAccountTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="20dp"
-                android:fontFamily="@font/akaya_telivigala"
-                android:text="Delete your account"
-                android:textAlignment="center"
-                android:textColor="@color/red"
-                android:textSize="24sp"
-                android:textStyle="italic" />
-        </RelativeLayout>
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/avatarIV"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="26dp"
+                    android:layout_marginEnd="-37dp"
+                    android:background="?android:attr/listDivider" />
+
+                <Button
+                    android:id="@+id/pendingBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/divider"
+                    android:layout_alignParentStart="true"
+                    android:backgroundTint="@color/transparent"
+                    android:drawableEnd="@drawable/offerpending"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:text="Pending"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="30sp" />
+
+                <Button
+                    android:id="@+id/editProfileBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/pendingBtn"
+                    android:layout_alignParentStart="true"
+                    android:backgroundTint="@color/transparent"
+                    android:drawableEnd="@drawable/editprofile"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:text="Edit Profile"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="30sp" />
+
+                <Button
+                    android:id="@+id/logOutBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editProfileBtn"
+                    android:layout_alignParentStart="true"
+                    android:backgroundTint="@color/transparent"
+                    android:drawableEnd="@drawable/log_out"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:text="Log out"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/deleteAccountTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:text="Delete your account"
+                    android:textAlignment="center"
+                    android:textColor="@color/red"
+                    android:textSize="24sp"
+                    android:textStyle="italic" />
+            </RelativeLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

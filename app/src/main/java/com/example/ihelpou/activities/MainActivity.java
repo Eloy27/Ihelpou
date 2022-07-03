@@ -2,16 +2,22 @@ package com.example.ihelpou.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.example.ihelpou.R;
 import com.example.ihelpou.classes.GestClassDB;
 import com.example.ihelpou.models.User;
@@ -22,10 +28,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,25 +49,32 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout logingID;
     private RelativeLayout relativeLayout;
     private Toast toast;
+    private boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
+        setIsConnected();
         checkConnection();
         emailET = findViewById(R.id.emailET);
         passwordET = findViewById(R.id.passwordET);
         lpi = findViewById(R.id.linearIndicator);
         logingID = findViewById(R.id.logingID);
         relativeLayout = findViewById(R.id.relativeLayout);
-
     }
 
-    public void checkConnection(){
+    public void setIsConnected(){
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    public void checkConnection() {
         try {
-            if (isConnected()) {
+            if (isConnected) {
                 loadPreferences(getApplicationContext());
-            } else{
+            } else {
                 setMainLogin();
             }
         } catch (InterruptedException e) {
@@ -65,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setMainLogin(){
+    public void setMainLogin() {
         setTheme(R.style.BackGround);
         try {
             Thread.sleep(2000);
@@ -74,12 +93,6 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
     }
-
-    public boolean isConnected() throws InterruptedException, IOException {
-        String command = "ping -c 1 google.com";
-        return Runtime.getRuntime().exec(command).waitFor() == 0;
-    }
-
 
     public void registerBtn(View view) {
         Intent intent = new Intent(getApplicationContext(), UserGestActivity.class);
@@ -92,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
             relativeLayout.setVisibility(View.INVISIBLE);
             logingID.setVisibility(View.VISIBLE);
             login(user, passwordET.getText().toString(), getApplicationContext(), false);
-        }
-        else{
+        } else {
             showToast();
         }
     }
@@ -114,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(User userLogin, String password, Context c, Boolean control) throws IOException, InterruptedException {
-        if (isConnected()) {
+        setIsConnected();
+        if (isConnected) {
             if (!userLogin.getEmail().equals("") && !password.equals("")) {
                 fsAuth.signInWithEmailAndPassword(userLogin.getEmail(), password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
@@ -166,9 +179,14 @@ public class MainActivity extends AppCompatActivity {
                 setMainLogin();
             }
         } else {
-            relativeLayout.setVisibility(View.VISIBLE);
-            logingID.setVisibility(View.INVISIBLE);
-            Toast.makeText(c, "There isn't internet connection", Toast.LENGTH_SHORT).show();
+            try {
+                relativeLayout.setVisibility(View.VISIBLE);
+                logingID.setVisibility(View.INVISIBLE);
+                Toast.makeText(c, "There isn't internet connection", Toast.LENGTH_SHORT).show();
+            } catch (NullPointerException npe) {
+                Toast.makeText(c, "There isn't internet connection", Toast.LENGTH_SHORT).show();
+                onBackPressed();
+            }
         }
     }
 

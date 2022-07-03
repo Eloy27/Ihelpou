@@ -32,9 +32,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -91,11 +94,19 @@ public class GestAidActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkDescription() && !startTimeET.getText().toString().equals("") && !finishTimeET.getText().toString().equals("") && !firstDateET.getText().toString().equals("")) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    String firstDate = "";
+                    try {
+                        Date date_date = sdf.parse(firstDateET.getText().toString());
+                        firstDate = sdf.format(date_date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     if (openEdit != null) {
-                        Aid aidObject = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString());
+                        Aid aidObject = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDate);
                         gestClassDB.editAid(aidObject, user, getApplicationContext(), aid.getKey());
                     } else {
-                        Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDateET.getText().toString(), "no", "");
+                        Aid aid = new Aid(descriptionET.getText().toString(), startTimeET.getText().toString(), finishTimeET.getText().toString(), firstDate, "no", "");
                         gestClassDB.registerAid(aid, user, getApplicationContext());
                     }
                 } else {
@@ -197,7 +208,18 @@ public class GestAidActivity extends AppCompatActivity {
                 minute = minuteTPD;
                 switch (v.getId()) {
                     case R.id.startTimeET:
-                        startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        if (finishTimeET.getText().toString().equals("")) {
+                            startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        } else {
+                            String startTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+                            LocalTime startTimeLT = LocalTime.parse(startTime);
+                            LocalTime finishTimeLT = LocalTime.parse(finishTimeET.getText().toString());
+                            if (startTimeLT.compareTo(finishTimeLT) < 0) {
+                                startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Introduce a valid time (greater than start time)", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                         break;
                     case R.id.finishTimeET:
                         if (startTimeET.getText().toString().equals("")) {

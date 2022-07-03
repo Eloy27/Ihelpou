@@ -3,6 +3,8 @@ package com.example.ihelpou.classes;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.example.ihelpou.activities.InfoUserActivity;
 import com.example.ihelpou.models.Aid;
 import com.example.ihelpou.models.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class RecyclerAdapterHelper extends RecyclerView.Adapter<RecyclerAdapterHelper.HelpersViewHolder>{
@@ -24,6 +27,7 @@ public class RecyclerAdapterHelper extends RecyclerView.Adapter<RecyclerAdapterH
     private ArrayList<User> listHelpers;
     private Context c;
     private Aid aid;
+    private GestClassDB gestClassDB = new GestClassDB();
 
     public RecyclerAdapterHelper(ArrayList<User> listHelpers, Context c, Aid aid){
         this.listHelpers = listHelpers;
@@ -39,7 +43,11 @@ public class RecyclerAdapterHelper extends RecyclerView.Adapter<RecyclerAdapterH
 
     @Override
     public void onBindViewHolder(@NonNull HelpersViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.avatarIV.setImageResource(R.drawable.avatar);
+        try {
+            gestClassDB.getImage(Uri.parse(listHelpers.get(position).getEmail()), holder.avatarIV);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         holder.nameTV.setText(listHelpers.get(position).getName());
         holder.phoneTV.setText("Phone: "+listHelpers.get(position).getPhone());
 

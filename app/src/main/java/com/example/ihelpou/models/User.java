@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    private String email, name, username, surname, phone, address, dateOfBirth;
+    private String email, name, surname, phone, address, dateOfBirth;
     //private Bitmap avatar;
 
     public User() {
@@ -15,9 +15,8 @@ public class User implements Serializable {
     }
 
 
-    public User(String email, String name, String username, String surname, String phone, String address, String dateOfBirth) {
+    public User(String email, String name, String surname, String phone, String address, String dateOfBirth) {
         this.name = name;
-        this.username = username;
         this.surname = surname;
         this.phone = phone;
         this.address = address;
@@ -31,14 +30,6 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getSurname() {
@@ -86,7 +77,6 @@ public class User implements Serializable {
         return "User{" +
                 "email='" + email + '\'' +
                 ", name='" + name + '\'' +
-                ", username='" + username + '\'' +
                 ", surname='" + surname + '\'' +
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +

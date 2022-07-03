@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.example.ihelpou.activities.GestAvailableDaysActivity;
 import com.example.ihelpou.activities.InitialActivity;
@@ -42,6 +43,8 @@ public class OfferFragment extends Fragment {
     private FirebaseFirestore fsDB = FirebaseFirestore.getInstance();
     private EditText searchET;
     private ArrayList<Aid> listAidsAux = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout messageID;
 
     public OfferFragment() {
     }
@@ -58,11 +61,13 @@ public class OfferFragment extends Fragment {
         listAidsAvailablesRV = view.findViewById(R.id.listAidsRV);
         availabilityBtn = view.findViewById(R.id.availabilityBtn);
         searchET = view.findViewById(R.id.searchET);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        messageID = view.findViewById(R.id.messageID);
 
         getUser(gestClassDB.getEmailActualUser(getContext()));
         listAidsAvailablesRV.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        gestClassDB.getAidsAccordingAvailability(listAidsAvailables, listAidsAvailablesRV, getContext(), availabilityBtn);
+        gestClassDB.getAidsAccordingAvailability(listAidsAvailables, listAidsAvailablesRV, getContext(), availabilityBtn, messageID);
         gestClassDB.checkAvailability(availabilityBtn, getContext());
 
         availabilityBtn.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +93,7 @@ public class OfferFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 listAidsAux.clear();
                 if (searchET.getText().toString().length() == 0) {
-                    gestClassDB.getAidsAccordingAvailability(listAidsAvailables, listAidsAvailablesRV, getContext(), availabilityBtn);
+                    gestClassDB.getAidsAccordingAvailability(listAidsAvailables, listAidsAvailablesRV, getContext(), availabilityBtn, messageID);
                 } else {
                     for (Aid aid : listAidsAvailables) {
                         if (aid.getDescription().toLowerCase().contains(searchET.getText().toString().toLowerCase())) {
@@ -102,6 +107,15 @@ public class OfferFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                gestClassDB.getAidsAccordingAvailability(listAidsAvailables, listAidsAvailablesRV, getContext(), availabilityBtn, messageID);
+                gestClassDB.adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 

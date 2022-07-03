@@ -4,61 +4,97 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F3F2ED"
     tools:context=".activities.PendingActivity">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/backBtn"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="-6dp"
-            android:backgroundTint="#00FFFFFF"
-            android:onClick="comeBack"
-            android:scaleType="fitCenter"
-            android:visibility="visible"
-            app:srcCompat="@drawable/volver"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/searchTIL"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
+            android:id="@+id/messageID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="10dp"
-            android:layout_toEndOf="@+id/backBtn"
-            android:hint="Search your pending help"
-            app:boxCornerRadiusBottomEnd="40dp"
-            app:boxCornerRadiusBottomStart="40dp"
-            app:boxCornerRadiusTopEnd="40dp"
-            app:boxCornerRadiusTopStart="40dp"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            app:endIconDrawable="@drawable/quitar"
-            app:endIconMode="clear_text"
-            app:startIconDrawable="@drawable/lupa">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/searchET"
+            <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/akaya_telivigala"
-                android:inputType="textFilter"
+                android:text="Your pending aids will appear here"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/akaya_telivigala"
+                android:text="You can already help someone"
+                android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="24sp" />
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listAidsRV"
+        </LinearLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/searchTIL"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="10dp"
-            android:divider="@null">
+            android:layout_height="match_parent">
 
-        </androidx.recyclerview.widget.RecyclerView>
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/backBtn"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="-6dp"
+                android:backgroundTint="#00FFFFFF"
+                android:onClick="comeBack"
+                android:scaleType="fitCenter"
+                android:visibility="visible"
+                app:srcCompat="@drawable/volver"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchTIL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="10dp"
+                android:layout_toEndOf="@+id/backBtn"
+                android:hint="Search your pending help"
+                app:boxCornerRadiusBottomEnd="40dp"
+                app:boxCornerRadiusBottomStart="40dp"
+                app:boxCornerRadiusTopEnd="40dp"
+                app:boxCornerRadiusTopStart="40dp"
+                app:endIconDrawable="@drawable/quitar"
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/lupa">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/akaya_telivigala"
+                    android:inputType="textFilter"
+                    android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listAidsRV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/searchTIL"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="10dp"
+                android:divider="@null">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

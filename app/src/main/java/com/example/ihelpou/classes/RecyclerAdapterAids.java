@@ -52,6 +52,7 @@ public class RecyclerAdapterAids extends RecyclerView.Adapter<RecyclerAdapterAid
     private User user;
 
     public RecyclerAdapterAids(ArrayList<Aid> listAids, Context c, char who, ImageButton imageButton) {
+        gestClassDB.getUsersWithAvailability();
         this.listAids = listAids;
         this.c = c;
         this.who = who;
@@ -173,10 +174,10 @@ public class RecyclerAdapterAids extends RecyclerView.Adapter<RecyclerAdapterAid
                         }
                         updateAll();
                     } else {
-                        if (!hashMapItems.get(position).equals("pending")) {
+                        if (hashMapItems.get(position).equals("pending")) {
                             gestClassDB.showHelperAccordingAid(listAids.get(position), c);
                         } else {
-                            gestClassDB.checkHelpersAccordingAid(listAids.get(position), c);
+                            gestClassDB.checkExistHelpersAccordingAid(listAids.get(position), c);
                         }
                     }
                 } else if (who == 'o') {

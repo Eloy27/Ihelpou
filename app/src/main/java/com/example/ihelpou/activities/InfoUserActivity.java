@@ -30,9 +30,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class InfoUserActivity extends AppCompatActivity {
@@ -71,6 +73,7 @@ public class InfoUserActivity extends AppCompatActivity {
         titleAvailabilityTV = findViewById(R.id.titleAvailabilityTV);
         callBtn = findViewById(R.id.callBtn);
         avatarIV.setImageResource(R.drawable.avatar);
+
 
         Intent i = getIntent();
         helper = (User) i.getSerializableExtra("helper");
@@ -134,6 +137,11 @@ public class InfoUserActivity extends AppCompatActivity {
         addressTV.setText(addressTV.getText() + " " + user.getAddress());
         ageTV.setText(ageTV.getText() + " " + user.getDateOfBirth());
         gestClassDB.setInfoHelper(user, startTimeTV, finishTimeTV, mondayBtn, tuesdayBtn, wednesdayBtn, thursdayBtn, fridayBtn, saturdayBtn, sundayBtn, titleAvailabilityTV);
+        try {
+            gestClassDB.getImage(Uri.parse(user.getEmail()), avatarIV);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void comeBack(View view) {

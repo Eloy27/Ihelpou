@@ -313,7 +313,18 @@ public class GestAvailableDaysActivity extends AppCompatActivity {
                 minute = minuteTPD;
                 switch (v.getId()) {
                     case R.id.startTimeET:
-                        startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        if (finishTimeET.getText().toString().equals("")) {
+                            startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        } else {
+                            String startTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+                            LocalTime startTimeLT = LocalTime.parse(startTime);
+                            LocalTime finishTimeLT = LocalTime.parse(finishTimeET.getText().toString());
+                            if (startTimeLT.compareTo(finishTimeLT) < 0) {
+                                startTimeET.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Introduce a valid time (greater than start time)", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                         break;
                     case R.id.finishTimeET:
                         if (startTimeET.getText().toString().equals("")) {

@@ -17,6 +17,7 @@
       app:layout_constraintVertical_bias="0.0">
 
     <TextView
+        style="@style/Theme.Ihelpou"
         android:id="@+id/titleAvailabilityTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +29,6 @@
         android:fontFamily="@font/akaya_telivigala"
         android:text="Add your availability"
         android:textAlignment="center"
-        android:textColor="@color/black"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -96,6 +96,7 @@
 
 
     <TextView
+        style="@style/Theme.Ihelpou"
         android:id="@+id/daysTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -107,9 +108,8 @@
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/akaya_telivigala"
         android:text="Availability"
-        android:textColor="@color/black"
-        android:textSize="30sp"
         android:textAlignment="center"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout

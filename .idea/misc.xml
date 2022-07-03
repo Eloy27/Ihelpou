@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.228" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/drawable/error.xml" value="0.1945" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/drawable/help.xml" value="0.1915" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/drawable/help_24dp.xml" value="0.1915" />
@@ -21,22 +22,22 @@
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_gest_available_days.xml" value="0.33" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_help_seeker_register.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_helpers.xml" value="0.3009833262077811" />
-        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_info_helper.xml" value="0.33" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_info_helper.xml" value="0.18266666666666667" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_initial.xml" value="0.21" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_initial2.xml" value="0.14709569577935647" />
-        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_pending.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_register.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_start.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_user_gest.xml" value="0.16" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_user_gest.xml" value="0.25" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/activity_user_register.xml" value="0.22" />
-        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/aids_list_row.xml" value="0.5" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/aids_list_row.xml" value="0.25" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_aids.xml" value="0.3284600389863548" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_begining.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_help_seeker.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_offer.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_pending.xml" value="0.25" />
-        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_request.xml" value="0.33" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_request.xml" value="0.19066666666666668" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_user.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/fragment_want_helper.xml" value="0.1675929884566054" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/helpers_list_row.xml" value="0.25" />
@@ -44,10 +45,12 @@
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/layout_loading.xml" value="0.12441214194100043" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/layout/listacanciones_row.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/menu/bottom_nav_menu.xml" value="0.21932449764856776" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1135" />
+        <entry key="..\:/Users/eloyg/AndroidStudioProjects/Ihelpou/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1135" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="Android API 31 Platform" project-jdk-type="Android SDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

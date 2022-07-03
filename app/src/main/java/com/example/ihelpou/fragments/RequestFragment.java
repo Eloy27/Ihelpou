@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.example.ihelpou.activities.GestAidActivity;
 import com.example.ihelpou.classes.GestClassDB;
@@ -35,6 +36,7 @@ public class RequestFragment extends Fragment {
     private EditText searchET;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerAdapterAids listAidsAdapter;
+    private LinearLayout messageID;
 
     public RequestFragment() {
     }
@@ -52,9 +54,10 @@ public class RequestFragment extends Fragment {
         addAidBtn = view.findViewById(R.id.addAidBtn);
         searchET = view.findViewById(R.id.searchET);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        messageID = view.findViewById(R.id.messageID);
 
         listAidsRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        gestClassDB.getAids(listAids, listAidsRV, getContext(), addAidBtn);
+        gestClassDB.getAids(listAids, listAidsRV, getContext(), addAidBtn, messageID);
 
         searchET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -65,7 +68,7 @@ public class RequestFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 listAidsAux.clear();
                 if (searchET.getText().toString().length() == 0) {
-                    gestClassDB.getAids(listAids, listAidsRV, getContext(), addAidBtn);
+                    gestClassDB.getAids(listAids, listAidsRV, getContext(), addAidBtn, messageID);
                 } else {
                     for (Aid aid : listAids) {
                         if (aid.getDescription().toLowerCase().contains(searchET.getText().toString().toLowerCase())) {
@@ -93,7 +96,7 @@ public class RequestFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                gestClassDB.getAids(listAids, listAidsRV, getContext(), addAidBtn);
+                gestClassDB.getAids(listAids, listAidsRV, getContext(), addAidBtn, messageID);
                 gestClassDB.adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }

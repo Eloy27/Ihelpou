@@ -1,21 +1,24 @@
 package com.example.ihelpou.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ihelpou.R;
 import com.example.ihelpou.classes.GestClassDB;
@@ -28,17 +31,25 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.List;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
-public class UserGestActivity extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class UserGestActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     private EditText nameET, usernameET, passwordET, passwordConfirmET, surnameET, addressET, phoneET, emailET, dateOfBirthET;
-    private ImageButton backBtn, avatarBtn;
+    private CircleImageView avatarBtn;
     private Button okBtn;
     private GestClassDB gestClassDB = new GestClassDB();
     private int day = 01, month = 01, year = 2022;
-    private String where, strEmail, error;
+    private String where, strEmail, error, selectedPath;
     private User user;
     private FirebaseFirestore fsDB = FirebaseFirestore.getInstance();
     private TextView crteUserAccountTV, textView;
@@ -46,18 +57,15 @@ public class UserGestActivity extends AppCompatActivity {
     private LinearProgressIndicator lpi;
     private LinearLayout editingID;
     private RelativeLayout relativeLayout;
+    private Uri selectedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_gest);
 
-        backBtn = findViewById(R.id.backBtn);
         nameET = findViewById(R.id.nameET);
         nameTIL = findViewById(R.id.nameTIL);
-
-        usernameET = findViewById(R.id.usernameET);
-        usernameTIL = findViewById(R.id.usernameTIL);
 
         passwordET = findViewById(R.id.passwordET);
         passwordTIL = findViewById(R.id.passwordTIL);
@@ -92,9 +100,9 @@ public class UserGestActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         where = i.getStringExtra("where");
-        error =i.getStringExtra("error");
+        error = i.getStringExtra("error");
 
-        if (error != null){
+        if (error != null) {
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         }
 
@@ -104,6 +112,11 @@ public class UserGestActivity extends AppCompatActivity {
             passwordTIL.setHint("Old Password");
             passwordConfirmTIL.setHint("New Password");
             getUser(gestClassDB.getEmailActualUser(this));
+            try {
+                gestClassDB.getImage(Uri.parse(gestClassDB.getEmailActualUser(this)), avatarBtn);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         nameET.addTextChangedListener(new TextWatcher() {
@@ -114,21 +127,6 @@ public class UserGestActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 gestClassDB.textChanges(nameET, nameTIL, nameET.getText().toString().matches("[A-zÀ-ÿ ]{4,20}"), "It cannot contain numbers and must contain between 4 and 20 characters");
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        usernameET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                gestClassDB.textChanges(usernameET, usernameTIL, usernameET.getText().toString().matches("^[A-z][0-9A-zÀ-ÿ_-]{7,30}"), "Minimum 8 alphanumeric characters and first one must be a letter, not too long");
             }
 
             @Override
@@ -236,36 +234,53 @@ public class UserGestActivity extends AppCompatActivity {
             }
         });
 
+        avatarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        avatarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_PICK);
+                startActivityForResult(
+                        Intent.createChooser(intent, "Select an image"),
+                        43);
+            }
+        });
+
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkName() && checkUsername() && checkEmail() && checkPassword() && checkConfirmPassword() && checkSurname() && checkPhone() && checkAddress()) {
-                    User user = new User(emailET.getText().toString(), nameET.getText().toString(), usernameET.getText().toString(),
+                if (checkName() && checkEmail() && checkPassword() && checkConfirmPassword() && checkSurname() && checkPhone() && checkAddress()) {
+                    User user = new User(emailET.getText().toString(), nameET.getText().toString(),
                             surnameET.getText().toString(), phoneET.getText().toString(), addressET.getText().toString(),
                             dateOfBirthET.getText().toString());
                     if (where != null) {
                         editingID.setVisibility(View.VISIBLE);
                         relativeLayout.setVisibility(View.INVISIBLE);
-                        gestClassDB.editUser(user, passwordET.getText().toString(), passwordConfirmET.getText().toString(), strEmail, lpi, getApplicationContext());
+                        gestClassDB.editUser(user, passwordET.getText().toString(), passwordConfirmET.getText().toString(), strEmail, lpi, getApplicationContext(), selectedImage);
                     } else {
                         textView.setText("Creating your profile");
                         editingID.setVisibility(View.VISIBLE);
                         relativeLayout.setVisibility(View.INVISIBLE);
-                        gestClassDB.registerUser(user, passwordConfirmET.getText().toString(), lpi, getApplicationContext());
+                        gestClassDB.registerUser(user, passwordConfirmET.getText().toString(), lpi, getApplicationContext(), selectedImage);
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Check your data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        checkPermission();
     }
 
     public boolean checkName() {
         return nameET.getText().toString().matches("[A-zÀ-ÿ ]{4,20}");
-    }
-
-    public boolean checkUsername() {
-        return usernameET.getText().toString().matches("^[A-z][0-9A-zÀ-ÿ_-]{7,30}");
     }
 
     public boolean checkEmail() {
@@ -302,6 +317,7 @@ public class UserGestActivity extends AppCompatActivity {
         return addressET.getText().toString().matches("[0-9A-zÀ-ÿ ]{5,40}");
     }
 
+
     public void getUser(String email) {
         fsDB.collection("User")
                 .get()
@@ -315,7 +331,6 @@ public class UserGestActivity extends AppCompatActivity {
                                     user.setEmail(email);
                                     strEmail = user.getEmail();
                                     nameET.setText(user.getName());
-                                    usernameET.setText(user.getUsername());
                                     surnameET.setText(user.getSurname());
                                     addressET.setText(user.getAddress());
                                     phoneET.setText(user.getPhone());
@@ -344,5 +359,61 @@ public class UserGestActivity extends AppCompatActivity {
         datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis() - Long.parseLong("220903200000"));
         datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis() - Long.parseLong("3155760000000"));
         datePickerDialog.show();
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        if (requestCode == 43 && resultCode == Activity.RESULT_OK && imageReturnedIntent!= null && imageReturnedIntent.getData() != null) {
+            selectedImage = imageReturnedIntent.getData();
+            CropImage.activity(selectedImage)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setCropShape(CropImageView.CropShape.OVAL)
+                    .setActivityTitle("Crop Image")
+                    .setFixAspectRatio(true)
+                    .setCropMenuCropButtonTitle("Done")
+                    .start(this);
+
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(imageReturnedIntent);
+            if (resultCode == RESULT_OK) {
+                selectedImage = result.getUri();
+                avatarBtn.setImageURI(selectedImage);
+                if (where != null){
+                    gestClassDB.uploadImage(selectedImage, user.getEmail());
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Toast.makeText(this , error.getMessage() , Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void checkPermission() {
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (EasyPermissions.hasPermissions(this, permission)) {
+        } else {
+            EasyPermissions.requestPermissions(this, "IHelpou needs permission to upload an avatar", 123, permission);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 }
